@@ -1,0 +1,279 @@
+body {
+	background-color: rgb(252, 252, 48);
+	color: #e8e8e8;
+}
+
+.cabecalho {
+	height: 80px;
+	background-color: #465eff;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 80px;
+}
+
+.cabecalho .logo {
+	display: flex;
+	gap: 15px;
+}
+
+.cabecalho .menu {
+	display: flex;
+	gap: 30px;
+}
+
+.cabecalho .menu li a {
+	padding: 30px;
+	color: #e8e8e8;
+	font-weight: bolder;
+	font-size: 15px;
+	font-family: "Chalet";
+}
+
+.lista-de-importacao {
+	display: flex;
+	justify-content: center;
+	gap: 200px; /* Espaço entre os botões */
+	margin-top: 20px;
+}
+
+button {
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	border-radius: 5px;
+	background-color: rgb(51, 51, 189);
+	color: white;
+	transition: background-color 0.3s;
+}
+
+.btn-taa {
+	background-color: rgb(70, 130, 180);
+}
+
+.btn-demais-bens {
+	background-color: rgb(70, 130, 180);
+}
+
+/* Estilo da tooltip */
+.tooltip {
+	position: absolute;
+	top: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+	padding: 8px;
+	border-radius: 5px;
+	font-size: 14px;
+	white-space: nowrap;
+	display: none;
+	z-index: 1000;
+}
+
+.tooltip::after {
+	content: '';
+	position: absolute;
+	top: -5px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+}
+.cabecalho .menu li a:hover {
+	border-bottom: 2px solid #fff;
+}
+
+.home {
+	display: flex;
+	position: relative;
+	min-height: calc(100vh - 80px);
+}
+
+.home::after {
+	content: "";
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.7) 35%, transparent 65%);
+}
+
+.home .imagem-fundo {
+	width: 100%;
+	object-fit: cover;
+}
+
+.home .informacoes {
+	position: absolute;
+	z-index: 1;
+	min-height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 32px;
+	padding: 80px 80px 80px 170px;
+	max-width: 780px;
+}
+
+.home .informacoes img {
+	max-width: 150px;
+}
+
+.home .informacoes .lista-de-importacao {
+	display: flex;
+	gap: 32px;
+}
+
+.home .informacoes .titulo {
+	font-family: "ChaletComprime";
+	font-size: 55px;
+}
+
+.home .informacoes .texto {
+	font-family: "Chalet";
+	font-size: 18px;
+	line-height: 1.6;
+}
+
+.btn-exec-inicial,
+.btn-demais-bens,
+.btn-taa,
+.btn-anexo {
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 0.5px solid #fff;
+	border-radius: 4px;
+	font-family: "ChaletComprime";
+	font-size: 28px;
+	text-align: center;
+	padding: 20px 40px;
+	text-transform: uppercase;
+	width: 50%;
+	transition: all 0.3s ease-in;
+	color: #e8e8e8;
+}
+
+.btn-exec-inicial {
+	width: 100%;
+}
+
+.btn-taa:hover {
+	background-color: #fff;
+	color: #000;
+}
+
+.btn-demais-bens:hover {
+	background-color: #fff;
+	color: #000;
+}
+.btn-anexo:hover {
+	background-color: #fff;
+	color: #000;
+}
+
+.anexo-bb .capa-do-banco {
+	width: 270px;
+}
+
+.anexo-bb {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	padding: 50px;
+	align-items: center;
+}
+
+.anexo-bb .titulo {
+	font-family: "ChaletComprime";
+	font-size: 50px;
+	font-weight: 700;
+	margin-bottom: 50px;
+}
+
+.anexo2 ~h2 {
+	color: black;
+}
+
+.anexo-bb .anexo2 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: rgb(51, 51, 189);
+	width: 50%;
+	border-radius: 10px;
+	padding: 80px;
+	gap: 40px;
+	color: #e8e8e8;
+}
+
+.anexo-bb .informacoes {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.anexo-bb .informacoes h3 {
+	font-family: "ChaletComprime";
+	font-size: 52px;
+	font-weight: 700;
+}
+
+.anexo-bb .informacoes p {
+	color: #e8e8e8;
+	font-family: "Chalet";
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+.anexo-bb .informacoes .parques {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 32px;
+	justify-content: center;
+}
+
+.import-button,
+.export-button-anexoBbFinal,
+.export-button-perto,
+.export-button-nrc,
+.export-button-comodato,
+.export-button-diebold {
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 0.5px solid #fff;
+	border-radius: 4px;
+	font-family: "ChaletComprime";
+	font-size: 28px;
+	text-align: center;
+	padding: 20px 40px;
+	text-transform: uppercase;
+	width: 100%;
+	transition: all 0.3s ease-in;
+}
+
+.btn-executar:hover,
+.export-button-perto:hover,
+.export-button-comodato:hover,
+.export-button-diebold:hover,
+.export-button-nrc:hover,
+.export-button-anexoBbFinal:hover,
+.import-button:hover {
+	background-color: #fff;
+	color: #000;
+}
+
+button:disabled {
+	background-color: #bdc3c7;
+	cursor: not-allowed;
+}
+
+.tooltip {
+	display: none;
+	position: absolute;
+	margin-top: 5px;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: 14px;
+}

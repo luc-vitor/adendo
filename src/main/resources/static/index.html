@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Anexo Automatizado</title>
+		<link rel="shortcut icon" href="src/images/favicon.png" type="image/x-icon" />
+		<link href="https://fonts.cdnfonts.com/css/chalet" rel="stylesheet" />
+
+		<link rel="shortcut icon" href="https://www.bbts.com.br/wp-content/themes/bbts/imagens/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="https://www.bbts.com.br/wp-content/themes/bbts/imagens/favicon.png" type="image/png">
+
+		<link rel="stylesheet" href="./src/css/reset.css" />
+		<link rel="stylesheet" href="./src/css/estilos.css" />
+		<link rel="stylesheet" href="./src/css/fontes.css" />
+		<link rel="stylesheet" href="./src/css/responsivo.css">
+	</head>
+
+	<body>
+		<header class="cabecalho">
+			<div class="logo">
+				<a href="index.html"></a><img src="./src/imagens/logomarca.jpg" alt="Simbolo banco do brasil" /></a>
+			</div>
+			<nav>
+				<ul class="menu">
+					<li>
+						<a href="#home">Início</a>
+					<li>
+						<a href="anexo.html">Anexo BB</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+
+			<!-- Tela principal -->
+		<main class="home" id="home">
+			<img class="imagem-fundo" src="./src/imagens/bbts3.png" alt="Prédio da bbts" />
+
+
+			<div class="informacoes">
+				<div class="lista-de-importacao">
+					<!-- Botão para importar TAA -->
+					<button class="btn-taa" id="btn-taa">Importar TAA</button>
+					<input type="file" id="input-taa" accept=".xlsx" style="display: none;">
+					<div class="tooltip" id="tooltip-taa">Clique para importar o arquivo TAA</div>
+
+					<!-- Botão para importar DEMAIS BENS -->
+					<button class="btn-demais-bens" id="btn-demais-bens">Importar DEMAIS BENS</button>
+					<input type="file" id="input-demais-bens" accept=".xlsx" style="display: none;">
+					<div class="tooltip" id="tooltip-demais-bens">Clique para importar o arquivo Demais Bens</div>
+				</div>
+
+				<!-- Botão de executar -->
+				<button id="btn-executar" disabled>Executar</button>
+				<div class="tooltip" id="tooltip-exec">Importe um arquivo para habilitar essa opção</div>
+
+				<!-- Textos da página principal  -->
+				<h1 class="titulo">Faça a importação das suas planilhas</h1>
+				<p class="texto">Veja ela sendo tratada automaticamente</p>
+					<!-- Botão para levar para página anexo bb -->
+				<a class="btn-anexo" href="anexo.html">Anexo BB</a>
+			</div>
+		</main>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+		<script>
+
+			let importedFileType = null; // Variável para identificar o tipo de arquivo importado
+
+			// Configuração de tooltips
+			function configureTooltip(buttonId, tooltipId) {
+				const button = document.getElementById(buttonId);
+				const tooltip = document.getElementById(tooltipId);
+
+				button.addEventListener('mouseenter', () => {
+					tooltip.style.display = 'block';
+				});
+
+				button.addEventListener('mouseleave', () => {
+					tooltip.style.display = 'none';
+				});
+			}
+
+			configureTooltip('btn-taa', 'tooltip-taa');
+			configureTooltip('btn-demais-bens', 'tooltip-demais-bens');
+			configureTooltip('btn-executar', 'tooltip-exec');
+
+			// Referências aos elementos
+			const inputTAA = document.getElementById('input-taa');
+			const inputDemaisBens = document.getElementById('input-demais-bens');
+			const btnTAA = document.getElementById('btn-taa');
+			const btnDemaisBens = document.getElementById('btn-demais-bens');
+			const btnExecutar = document.getElementById('btn-executar');
+
+			// Importação de arquivos
+			btnTAA.addEventListener('click', () => {
+				inputTAA.click();
+			});
+
+			btnDemaisBens.addEventListener('click', () => {
+				inputDemaisBens.click();
+			});
+
+			const fileInput = document.getElementById('fileInput');
+
+			// Function to handle file selection and upload
+			const handleFileUpload = (event) => {
+				const file = event.target.files[0];
+				if (file) {
+					// Optionally, you can read the file locally using FileReader if needed
+					// For now, we'll upload it directly to the server
+
+					const formData = new FormData();
+					formData.append('spreadsheet', file);
+
+					fetch('/api/v1/process', {
+						method: 'POST',
+						body: formData
+					})
+							.then(response => {
+								if (response.ok) {
+									alert("Dados enviados com sucesso!");
+								} else {
+									throw new Error('Erro na resposta do servidor.');
+								}
+							})
+							.catch(error => {
+								console.error('Erro ao enviar os dados:', error);
+								alert("Erro ao enviar os dados.");
+							});
+				}
+			};
+
+			inputTAA.addEventListener('change', (event) => {
+				const file = event.target.files[0];
+				if (file) {
+					importedFileType = 'TAA'; // Identifica o tipo de arquivo
+					alert(`Arquivo ${file.name} importado como TAA`);
+					btnExecutar.disabled = false; // Habilita o botão de executar
+				}
+			});
+
+			inputDemaisBens.addEventListener('change', (event) => {
+				const file = event.target.files[0];
+				if (file) {
+					importedFileType = 'Demais Bens'; // Identifica o tipo de arquivo
+					alert(`Arquivo ${file.name} importado como Demais Bens`);
+					btnExecutar.disabled = false; // Habilita o botão de executar
+				}
+			});
+
+			// Função para exportar planilha
+			function exportPlanilha(data, filename) {
+				const worksheet = XLSX.utils.aoa_to_sheet(data);
+				const workbook = XLSX.utils.book_new();
+				XLSX.utils.book_append_sheet(workbook, worksheet, 'Planilha');
+				XLSX.writeFile(workbook, filename);
+			}
+
+			// Evento de clique no botão "Executar"
+			btnExecutar.addEventListener('click', () => {
+				if (!importedFileType) {
+					alert('Nenhum arquivo foi importado.');
+					return;
+				}
+
+				// Dados simulados para exportação
+				const data = [
+					['Coluna 1', 'Coluna 2', 'Coluna 3'],
+					['Dado 1', 'Dado 2', 'Dado 3'],
+					['Dado A', 'Dado B', 'Dado C'],
+				];
+
+				// Exportação com base no tipo de arquivo importado
+				if (importedFileType === 'TAA') {
+					exportPlanilha(data, 'ANEXO_01.xlsx');
+					alert('Arquivo ANEXO_01.xlsx exportado com sucesso!');
+				} else if (importedFileType === 'Demais Bens') {
+					exportPlanilha(data, 'ANEXO_01_52.xlsx');
+					alert('Arquivo ANEXO_01_52.xlsx exportado com sucesso!');
+				}
+			});
+
+		</script>
+
+		<script src="./src/js/index.js"></script>
+	</body>
+</html>
