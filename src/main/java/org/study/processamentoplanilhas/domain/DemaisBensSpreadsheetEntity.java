@@ -1,30 +1,80 @@
 package org.study.processamentoplanilhas.domain;
 
-public class DemaisBensSpreadsheet {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity(name = "adendo52")
+public class DemaisBensSpreadsheetEntity {
 
     // Colunas da tabela
+
+    @Id
+    @Column(name = "nro_univ")
     private String numeroDoBem;
+
+    @Column(name = "mes")
     private String mes;
+
+    @Column(name = "tpo_pbms")
     private String tpoPbms;
+
+    @Column(name = "cls_pbm")
     private String clsPbms;
+
+    @Column(name = "scl_pbms")
     private String sclPbms;
+
+    @Column(name = "seq_pbms")
     private String seqPbms;
+
+ //   @Column(name = "seq_pbms") TEM NA PLANILHA MAS NÃO TEM NO BD
     private String pbms;
+
+    @Column(name = "cod_config")
     private String cdCfgBem;
+
+    @Column(name = "nome_do_contrato")
     private String nomeNoContrato;
-    private String vl;
-    private String criticidade52;
+
+    @Column(name = "valor")
+    private Double vl;
+
+    @Column(name = "criticidade")
+    private Long criticidade52;
+
+    @Column(name = "modelo")
     private String modelo;
+
+    @Column(name = "grupo")
     private String grupo;
+
+    @Column(name = "fornecedor")
     private String fornecedor;
+
+    @Column(name = "cd_uor_insl")
     private String cdOurInsl;
+
+    @Column(name = "prf_insl")
     private String prfDepeInsl;
+
+    @Column(name = "sag_insl")
     private String sagInsl;
+
+    @Column(name = "nome")
     private String nomeOurInstalacao;
+
+    @Column(name = "municipio")
     private String municipioAtualizado;
+
+    @Column(name = "uf")
     private String ufAtualizada;
+
+    @Column(name = "tipo_dependencia")
     private String tipoDeDependeciaAtualizada;
-    private String lote;
+
+    @Column(name = "lote")
+    private Long lote;
 
     public String getNumeroDoBem() {
         return numeroDoBem;
@@ -98,19 +148,19 @@ public class DemaisBensSpreadsheet {
         this.nomeNoContrato = nomeNoContrato;
     }
 
-    public String getVl() {
+    public Double getVl() {
         return vl;
     }
 
-    public void setVl(String vl) {
+    public void setVl(Double vl) {
         this.vl = vl;
     }
 
-    public String getCriticidade52() {
+    public Long getCriticidade52() {
         return criticidade52;
     }
 
-    public void setCriticidade52(String criticidade52) {
+    public void setCriticidade52(Long criticidade52) {
         this.criticidade52 = criticidade52;
     }
 
@@ -194,11 +244,11 @@ public class DemaisBensSpreadsheet {
         this.tipoDeDependeciaAtualizada = tipoDeDependeciaAtualizada;
     }
 
-    public String getLote() {
+    public Long getLote() {
         return lote;
     }
 
-    public void setLote(String lote) {
+    public void setLote(Long lote) {
         this.lote = lote;
     }
 

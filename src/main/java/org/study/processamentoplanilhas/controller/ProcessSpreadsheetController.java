@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.study.processamentoplanilhas.domain.CarroSpreadsheet;
-import org.study.processamentoplanilhas.domain.DemaisBensSpreadsheet;
+import org.study.processamentoplanilhas.domain.DemaisBensSpreadsheetEntity;
 import org.study.processamentoplanilhas.domain.TaaSpreadsheetEntity;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetService;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetServiceDemaisBens;
@@ -56,7 +56,7 @@ public class ProcessSpreadsheetController {
 
         String filename = file.getOriginalFilename();
 
-        List<DemaisBensSpreadsheet> dtos;
+        List<DemaisBensSpreadsheetEntity> dtos;
 
         if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls") && !filename.endsWith(".xlsb")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");

@@ -29,7 +29,7 @@ public class ProcessSpreadsheetServiceTaa {
         List<TaaSpreadsheetEntity> entities = new ArrayList<>();
         Instant start = Instant.now();
 
-        log.info("Processando Planilha Taa");
+        log.info("Processando Planilha Taa...");
         try (InputStream is = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
@@ -43,7 +43,6 @@ public class ProcessSpreadsheetServiceTaa {
                     isFirstRow = false; // Skip header row
                     continue;
                 }
-
 
                 // Pega valores da planilha, na linha
                 final Long idAdendo = getLongCellValue(row.getCell(0));
@@ -153,8 +152,8 @@ public class ProcessSpreadsheetServiceTaa {
             }
         }
 
-        log.info("Planilha Taa processada com sucesso");
-        log.info("Planilha Taa salvando no banco | qtdLinhas: {}", entities.size());
+        log.info("Planilha Taa salvando no banco... | qtdLinhas: {}", entities.size());
+        log.info("Planilha Taa processada com sucesso!");
         taaSpreadsheetRepository.saveAll(entities);
         log.info("Planilha Taa salva no banco | qtdLinhas: {}", entities.size());
         Instant finish = Instant.now();
