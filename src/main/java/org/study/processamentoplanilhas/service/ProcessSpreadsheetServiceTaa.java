@@ -34,7 +34,7 @@ public class ProcessSpreadsheetServiceTaa {
 
 
                 // Pega valores da planilha, na linha
-                final String idAdendo = getStringCellValue(row.getCell(0));
+                final Long idAdendo = getLongCellValue(row.getCell(0));
                 final String nroUniv = getStringCellValue(row.getCell(1));
                 final String tpoPbms = getStringCellValue(row.getCell(2));
                 final String clsPbms = getStringCellValue(row.getCell(3));
@@ -46,15 +46,15 @@ public class ProcessSpreadsheetServiceTaa {
                 final String nome = getStringCellValue(row.getCell(9));
                 final String municipio = getStringCellValue(row.getCell(10));
                 final String uf = getStringCellValue(row.getCell(11));
-                final String valor = getStringCellValue(row.getCell(12));
-                final String criticidade = getStringCellValue(row.getCell(13));
+                final Double valor = getDoubleCellValue(row.getCell(12));
+                final Long criticidade = getLongCellValue(row.getCell(13));
                 final String fornecedor = getStringCellValue(row.getCell(14));
                 final String modelo = getStringCellValue(row.getCell(15));
                 final String tipoDependencia = getStringCellValue(row.getCell(16));
                 final String semat = getStringCellValue(row.getCell(17));
                 final String supridora = getStringCellValue(row.getCell(18));
                 final String nomeSupridora = getStringCellValue(row.getCell(19));
-                final String distancia = getStringCellValue(row.getCell(20));
+                final Long distancia = getLongCellValue(row.getCell(20));
                 final String funcao = getStringCellValue(row.getCell(21));
                 final String tempoDeAquisicao = getStringCellValue(row.getCell(22));
                 final String codConfig = getStringCellValue(row.getCell(23));
@@ -69,7 +69,7 @@ public class ProcessSpreadsheetServiceTaa {
 
                 // Valida se a linha ta preenchida
 
-                final boolean hasIdAdendo = idAdendo != null && !idAdendo.isEmpty();
+                final boolean hasIdAdendo = idAdendo != null;
                 final boolean hasNroUniv = nroUniv != null && !nroUniv.isEmpty();
                 final boolean hasTpoPbms = tpoPbms != null && !tpoPbms.isEmpty();
                 final boolean hasClsPbms = clsPbms != null && !clsPbms.isEmpty();
@@ -81,15 +81,15 @@ public class ProcessSpreadsheetServiceTaa {
                 final boolean hasNome = nome != null && !nome.isEmpty();
                 final boolean hasMunicipio = municipio != null && !municipio.isEmpty();
                 final boolean hasUf = uf != null && !uf.isEmpty();
-                final boolean hasValor = valor != null && !valor.isEmpty();
-                final boolean hasCriticidade = criticidade != null && !criticidade.isEmpty();
+                final boolean hasValor = valor != null;
+                final boolean hasCriticidade = criticidade != null;
                 final boolean hasFornecedor = fornecedor != null && !fornecedor.isEmpty();
                 final boolean hasModelo = modelo != null && !modelo.isEmpty();
                 final boolean hasTipoDependencia = tipoDependencia != null && !tipoDependencia.isEmpty();
                 final boolean hasSemat = semat != null && !semat.isEmpty();
                 final boolean hasSupridora = supridora != null && !supridora.isEmpty();
                 final boolean hasNomeSupridora = nomeSupridora != null && !nomeSupridora.isEmpty();
-                final boolean hasDistancia = distancia != null && !distancia.isEmpty();
+                final boolean hasDistancia = distancia != null;
                 final boolean hasFuncao = funcao != null && !funcao.isEmpty();
                 final boolean hasTempoDeAquisicao = tempoDeAquisicao != null && !tempoDeAquisicao.isEmpty();
                 final boolean hasCodConfig = codConfig != null && !codConfig.isEmpty();
@@ -136,11 +136,26 @@ public class ProcessSpreadsheetServiceTaa {
                     dto.setSeret(seret);
                     dto.setNomeSeret(nomeSeret);
                     dto.setDistanciaSeret(distanciaSeret);
+                    dtos.add(dto);
                 }
             }
         }
 
         return dtos;
+    }
+
+    private Long getLongCellValue(Cell cell) {
+        if (cell == null || cell.getCellType() != CellType.NUMERIC) {
+            return null;
+        }
+        return Double.valueOf(cell.getNumericCellValue()).longValue();
+    }
+
+    private Double getDoubleCellValue(Cell cell) {
+        if (cell == null || cell.getCellType() != CellType.NUMERIC) {
+            return null;
+        }
+        return cell.getNumericCellValue();
     }
 
     private String getStringCellValue(Cell cell) {

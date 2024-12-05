@@ -3,7 +3,7 @@ package org.study.processamentoplanilhas.domain;
 public class TaaSpreadsheet {
 
     // Colunas da tabela
-    private String idAdendo;
+    private Long idAdendo;
     private String nroUniv;
     private String tpoPbms;
     private String clsPbms;
@@ -15,15 +15,15 @@ public class TaaSpreadsheet {
     private String nome;
     private String municipio;
     private String uf;
-    private String valor;
-    private String criticidade;
+    private Double valor;
+    private Long criticidade;
     private String fornecedor;
     private String modelo;
     private String tipoDependencia;
     private String semat;
     private String supridora;
     private String nomeSupridora;
-    private String distancia;
+    private Long distancia;
     private String funcao;
     private String codConfig;
     private String ctrAqsc;
@@ -35,11 +35,11 @@ public class TaaSpreadsheet {
     private String nomeSeret;
     private String distanciaSeret;
 
-    public String getIdAdendo() {
+    public Long getIdAdendo() {
         return idAdendo;
     }
 
-    public void setIdAdendo(String idAdendo) {
+    public void setIdAdendo(Long idAdendo) {
         this.idAdendo = idAdendo;
     }
 
@@ -131,19 +131,19 @@ public class TaaSpreadsheet {
         this.uf = uf;
     }
 
-    public String getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(String valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
-    public String getCriticidade() {
+    public Long getCriticidade() {
         return criticidade;
     }
 
-    public void setCriticidade(String criticidade) {
+    public void setCriticidade(Long criticidade) {
         this.criticidade = criticidade;
     }
 
@@ -195,11 +195,11 @@ public class TaaSpreadsheet {
         this.nomeSupridora = nomeSupridora;
     }
 
-    public String getDistancia() {
+    public Long getDistancia() {
         return distancia;
     }
 
-    public void setDistancia(String distancia) {
+    public void setDistancia(Long distancia) {
         this.distancia = distancia;
     }
 

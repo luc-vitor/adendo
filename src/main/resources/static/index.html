@@ -68,6 +68,7 @@
 		<script>
 
 			let importedFileType = null; // Variável para identificar o tipo de arquivo importado
+			let importedFile = null; // Variável para identificar o tipo de arquivo importado
 
 			// Configuração de tooltips
 			function configureTooltip(buttonId, tooltipId) {
@@ -106,20 +107,24 @@
 			const fileInput = document.getElementById('fileInput');
 
 			// Function to handle file selection and upload
-			const handleFileUpload = (event) => {
-				const file = event.target.files[0];
-				if (file) {
+			const handleFileUpload = () => {
+				if (importedFile) {
 					// Optionally, you can read the file locally using FileReader if needed
 					// For now, we'll upload it directly to the server
 
 					const formData = new FormData();
-					formData.append('spreadsheet', file);
+					formData.append('spreadsheet', importedFile);
+					const url = importedFileType === 'Demais Bens' ?
+							'/api/v1/process/demais-bens' :
+							'/api/v1/process/taa';
 
-					fetch('/api/v1/process', {
+					fetch(url, {
 						method: 'POST',
 						body: formData
 					})
 							.then(response => {
+								importedFile = null;
+								importedFileType = null;
 								if (response.ok) {
 									alert("Dados enviados com sucesso!");
 								} else {
@@ -127,9 +132,13 @@
 								}
 							})
 							.catch(error => {
+								importedFile = null;
+								importedFileType = null;
 								console.error('Erro ao enviar os dados:', error);
 								alert("Erro ao enviar os dados.");
 							});
+				} else {
+					console.warn('Não foi possivel enviar o arquivo pq o importedFile está null')
 				}
 			};
 
@@ -137,6 +146,7 @@
 				const file = event.target.files[0];
 				if (file) {
 					importedFileType = 'TAA'; // Identifica o tipo de arquivo
+					importedFile = file;
 					alert(`Arquivo ${file.name} importado como TAA`);
 					btnExecutar.disabled = false; // Habilita o botão de executar
 				}
@@ -146,6 +156,7 @@
 				const file = event.target.files[0];
 				if (file) {
 					importedFileType = 'Demais Bens'; // Identifica o tipo de arquivo
+					importedFile = file;
 					alert(`Arquivo ${file.name} importado como Demais Bens`);
 					btnExecutar.disabled = false; // Habilita o botão de executar
 				}
@@ -161,26 +172,11 @@
 
 			// Evento de clique no botão "Executar"
 			btnExecutar.addEventListener('click', () => {
-				if (!importedFileType) {
+				if (!importedFileType || !importedFile) {
 					alert('Nenhum arquivo foi importado.');
 					return;
 				}
-
-				// Dados simulados para exportação
-				const data = [
-					['Coluna 1', 'Coluna 2', 'Coluna 3'],
-					['Dado 1', 'Dado 2', 'Dado 3'],
-					['Dado A', 'Dado B', 'Dado C'],
-				];
-
-				// Exportação com base no tipo de arquivo importado
-				if (importedFileType === 'TAA') {
-					exportPlanilha(data, 'ANEXO_01.xlsx');
-					alert('Arquivo ANEXO_01.xlsx exportado com sucesso!');
-				} else if (importedFileType === 'Demais Bens') {
-					exportPlanilha(data, 'ANEXO_01_52.xlsx');
-					alert('Arquivo ANEXO_01_52.xlsx exportado com sucesso!');
-				}
+				handleFileUpload();
 			});
 
 		</script>

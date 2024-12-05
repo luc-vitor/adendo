@@ -58,7 +58,7 @@ public class ProcessSpreadsheetController {
 
         List<DemaisBensSpreadsheet> dtos;
 
-        if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls")) {
+        if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls") && !filename.endsWith(".xlsb")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");
         }
 
