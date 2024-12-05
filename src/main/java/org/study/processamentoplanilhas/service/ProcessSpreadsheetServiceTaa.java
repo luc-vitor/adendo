@@ -2,12 +2,15 @@ package org.study.processamentoplanilhas.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
-        import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.study.processamentoplanilhas.domain.TaaSpreadsheet;
+import org.study.processamentoplanilhas.domain.TaaSpreadsheetEntity;
+import org.study.processamentoplanilhas.repository.TaaSpreadsheetRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,9 +18,18 @@ import java.util.List;
 @Slf4j
 @Service
 public class ProcessSpreadsheetServiceTaa {
-    public List<TaaSpreadsheet> processExcelFile(MultipartFile file) throws IOException {
-        List<TaaSpreadsheet> dtos = new ArrayList<>();
 
+    private final TaaSpreadsheetRepository taaSpreadsheetRepository;
+
+    public ProcessSpreadsheetServiceTaa(TaaSpreadsheetRepository taaSpreadsheetRepository) {
+        this.taaSpreadsheetRepository = taaSpreadsheetRepository;
+    }
+
+    public List<TaaSpreadsheetEntity> processExcelFile(MultipartFile file) throws IOException {
+        List<TaaSpreadsheetEntity> entities = new ArrayList<>();
+        Instant start = Instant.now();
+
+        log.info("Processando Planilha Taa");
         try (InputStream is = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
@@ -35,14 +47,14 @@ public class ProcessSpreadsheetServiceTaa {
 
                 // Pega valores da planilha, na linha
                 final Long idAdendo = getLongCellValue(row.getCell(0));
-                final String nroUniv = getStringCellValue(row.getCell(1));
+                final String nroUniv = getStringNotacaoCientifica(row.getCell(1));
                 final String tpoPbms = getStringCellValue(row.getCell(2));
                 final String clsPbms = getStringCellValue(row.getCell(3));
                 final String sclPbms = getStringCellValue(row.getCell(4));
                 final String seqPbms = getStringCellValue(row.getCell(5));
                 final String nomeDoContrato = getStringCellValue(row.getCell(6));
                 final String prfInls = getStringCellValue(row.getCell(7));
-                final String sagInls = getStringCellValue(row.getCell(8));
+                final String sagInls = getStringNotacaoCientifica(row.getCell(8));
                 final String nome = getStringCellValue(row.getCell(9));
                 final String municipio = getStringCellValue(row.getCell(10));
                 final String uf = getStringCellValue(row.getCell(11));
@@ -104,44 +116,51 @@ public class ProcessSpreadsheetServiceTaa {
                 // Setas os valores da LINHA em um objeto
 
                 if (hasIdAdendo || hasNroUniv || hasTpoPbms || hasClsPbms || hasSclPbms || hasSeqPbms || hasNomeDoContrato || hasPrfInls || hasSagInls || hasNome || hasMunicipio || hasUf || hasValor || hasCriticidade || hasFornecedor || hasModelo || hasTipoDependencia || hasSemat || hasSupridora || hasNomeSupridora || hasDistancia || hasFuncao || hasTempoDeAquisicao || hasCodConfig || hasCtrAqsc || hasCompetencia || hasVlrAquisicao || hasVlrResidual || hasSeret || hasNomeSeret || hasDistanciaSeret) {
-                    TaaSpreadsheet dto = new TaaSpreadsheet();
-                    dto.setIdAdendo(idAdendo);
-                    dto.setNroUniv(nroUniv);
-                    dto.setTpoPbms(tpoPbms);
-                    dto.setClsPbms(clsPbms);
-                    dto.setSclPbms(sclPbms);
-                    dto.setSeqPbms(seqPbms);
-                    dto.setNomeDoContrato(nomeDoContrato);
-                    dto.setPrfInls(prfInls);
-                    dto.setSagInls(sagInls);
-                    dto.setNome(nome);
-                    dto.setMunicipio(municipio);
-                    dto.setUf(uf);
-                    dto.setValor(valor);
-                    dto.setCriticidade(criticidade);
-                    dto.setFornecedor(fornecedor);
-                    dto.setModelo(modelo);
-                    dto.setTipoDependencia(tipoDependencia);
-                    dto.setSemat(semat);
-                    dto.setSupridora(supridora);
-                    dto.setNomeSupridora(nomeSupridora);
-                    dto.setDistancia(distancia);
-                    dto.setFuncao(funcao);
-                    dto.setTempoDeAquisicao(tempoDeAquisicao);
-                    dto.setCodConfig(codConfig);
-                    dto.setCtrAqsc(ctrAqsc);
-                    dto.setCompetencia(competencia);
-                    dto.setVlrAquisicao(vlrAquisicao);
-                    dto.setVlrResidual(vlrResidual);
-                    dto.setSeret(seret);
-                    dto.setNomeSeret(nomeSeret);
-                    dto.setDistanciaSeret(distanciaSeret);
-                    dtos.add(dto);
+                    TaaSpreadsheetEntity entity = new TaaSpreadsheetEntity();
+                    entity.setIdAdendo(idAdendo);
+                    entity.setNroUniv(nroUniv);
+                    entity.setTpoPbms(tpoPbms);
+                    entity.setClsPbms(clsPbms);
+                    entity.setSclPbms(sclPbms);
+                    entity.setSeqPbms(seqPbms);
+                    entity.setNomeDoContrato(nomeDoContrato);
+                    entity.setPrfInls(prfInls);
+                    entity.setSagInls(sagInls);
+                    entity.setNome(nome);
+                    entity.setMunicipio(municipio);
+                    entity.setUf(uf);
+                    entity.setValor(valor);
+                    entity.setCriticidade(criticidade);
+                    entity.setFornecedor(fornecedor);
+                    entity.setModelo(modelo);
+                    entity.setTipoDependencia(tipoDependencia);
+                    entity.setSemat(semat);
+                    entity.setSupridora(supridora);
+                    entity.setNomeSupridora(nomeSupridora);
+                    entity.setDistancia(distancia);
+                    entity.setFuncao(funcao);
+                    entity.setTempoDeAquisicao(tempoDeAquisicao);
+                    entity.setCodConfig(codConfig);
+                    entity.setCtrAqsc(ctrAqsc);
+                    entity.setCompetencia(competencia);
+                    entity.setVlrAquisicao(vlrAquisicao);
+                    entity.setVlrResidual(vlrResidual);
+                    entity.setSeret(seret);
+                    entity.setNomeSeret(nomeSeret);
+                    entity.setDistanciaSeret(distanciaSeret);
+                    entities.add(entity);
                 }
             }
         }
 
-        return dtos;
+        log.info("Planilha Taa processada com sucesso");
+        log.info("Planilha Taa salvando no banco | qtdLinhas: {}", entities.size());
+        taaSpreadsheetRepository.saveAll(entities);
+        log.info("Planilha Taa salva no banco | qtdLinhas: {}", entities.size());
+        Instant finish = Instant.now();
+        Duration duration = Duration.between(start, finish);
+        log.info("Tempo de processamento: Segundos={} | Minutos={} | Horas={}",duration.toSeconds(),duration.toMinutes(),duration.toHours());
+        return entities;
     }
 
     private Long getLongCellValue(Cell cell) {
@@ -156,6 +175,14 @@ public class ProcessSpreadsheetServiceTaa {
             return null;
         }
         return cell.getNumericCellValue();
+    }
+
+    private String getStringNotacaoCientifica(Cell cell) {
+        Double cellValue = getDoubleCellValue(cell);
+        if(cellValue == null) {
+            return null;
+        }
+        return String.format("%.0f", cellValue);
     }
 
     private String getStringCellValue(Cell cell) {

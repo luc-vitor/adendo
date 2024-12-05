@@ -1,38 +1,105 @@
 package org.study.processamentoplanilhas.domain;
 
-public class TaaSpreadsheet {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity(name = "adendo50")
+public class TaaSpreadsheetEntity {
 
     // Colunas da tabela
+    @Id
+    @Column(name = "idadendo")
     private Long idAdendo;
+
+    @Column(name = "nro_univ")
     private String nroUniv;
+
+    @Column(name = "tpo_pbms")
     private String tpoPbms;
+
+    @Column(name = "cls_pbms")
     private String clsPbms;
+
+    @Column(name = "scl_pbms")
     private String sclPbms;
+
+    @Column(name = "seq_pbms")
     private String seqPbms;
+
+    @Column(name = "nome_do_contrato")
     private String nomeDoContrato;
+
+    @Column(name = "prf_insl")
     private String prfInls;
+
+    @Column(name = "sag_insl")
     private String sagInls;
+
+    @Column(name = "nome")
     private String nome;
+
+    @Column(name = "municipio")
     private String municipio;
+
+    @Column(name = "uf")
     private String uf;
+
+    @Column(name = "valor")
     private Double valor;
+
+    @Column(name = "criticidade")
     private Long criticidade;
+
+    @Column(name = "fornecedor")
     private String fornecedor;
+
+    @Column(name = "modelo")
     private String modelo;
+
+    @Column(name = "tipo_dependencia")
     private String tipoDependencia;
+
+    @Column(name = "semat")
     private String semat;
+
+    @Column(name = "supridora")
     private String supridora;
+
+    @Column(name = "nome_supridora")
     private String nomeSupridora;
+
+    @Column(name = "distancia")
     private Long distancia;
+
+    @Column(name = "funcao")
     private String funcao;
-    private String codConfig;
-    private String ctrAqsc;
-    private String competencia;
+
+    @Column(name = "tempo_de_aquisicao")
     private String tempoDeAquisicao;
+
+    @Column(name = "cod_config")
+    private String codConfig;
+
+    @Column(name = "ctr_aqsc")
+    private String ctrAqsc;
+
+    @Column(name = "competencia")
+    private String competencia;
+
+    @Column(name = "vlraquisicao")
     private String vlrAquisicao;
+
+    @Column(name = "vlrresidual")
     private String vlrResidual;
+
+    @Column(name = "seret")
     private String seret;
+
+    @Column(name = "nomeseret")
     private String nomeSeret;
+
+    @Column(name = "distanciaseret")
     private String distanciaSeret;
 
     public Long getIdAdendo() {
