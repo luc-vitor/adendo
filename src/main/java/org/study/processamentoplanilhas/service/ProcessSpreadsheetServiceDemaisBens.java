@@ -19,11 +19,11 @@ import java.util.List;
 @Service
 public class ProcessSpreadsheetServiceDemaisBens {
 
-    private final DemaisBensSpreadsheetRepository demaisBensSpreadsheetRepository;
-
     public ProcessSpreadsheetServiceDemaisBens(DemaisBensSpreadsheetRepository demaisBensSpreadsheetRepository) {
         this.demaisBensSpreadsheetRepository = demaisBensSpreadsheetRepository;
     }
+
+    private final DemaisBensSpreadsheetRepository demaisBensSpreadsheetRepository;
 
     public List<DemaisBensSpreadsheetEntity> processExcelFile(MultipartFile file) throws IOException {
         List<DemaisBensSpreadsheetEntity> entities = new ArrayList<>();
@@ -104,7 +104,7 @@ public class ProcessSpreadsheetServiceDemaisBens {
                     entity.setClsPbms(clsPbms);
                     entity.setSclPbms(sclPbms);
                     entity.setSeqPbms(seqPbms);
-                    entity.setPbms(pbms);
+                    //entity.setPbms(pbms);
                     entity.setCdCfgBem(cdCfgBem);
                     entity.setNomeNoContrato(nomeNoContrato);
                     entity.setVl(vl);

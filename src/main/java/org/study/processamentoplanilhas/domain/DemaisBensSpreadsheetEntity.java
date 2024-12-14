@@ -29,7 +29,7 @@ public class DemaisBensSpreadsheetEntity {
     private String seqPbms;
 
  //   @Column(name = "seq_pbms") TEM NA PLANILHA MAS NÃO TEM NO BD
-    private String pbms;
+ //   private String pbms;
 
     @Column(name = "cod_config")
     private String cdCfgBem;
@@ -124,13 +124,13 @@ public class DemaisBensSpreadsheetEntity {
         this.seqPbms = seqPbms;
     }
 
-    public String getPbms() {
-        return pbms;
-    }
+ //   public String getPbms() {
+ //       return pbms;
+ //   }
 
-    public void setPbms(String pbms) {
-        this.pbms = pbms;
-    }
+ //   public void setPbms(String pbms) {
+ //       this.pbms = pbms;
+ //   }
 
     public String getCdCfgBem() {
         return cdCfgBem;
@@ -261,7 +261,7 @@ public class DemaisBensSpreadsheetEntity {
                 ", clsPbms='" + clsPbms + '\'' +
                 ", sclPbms='" + sclPbms + '\'' +
                 ", seqPbms='" + seqPbms + '\'' +
-                ", pbms='" + pbms + '\'' +
+               // ", pbms='" + pbms + '\'' +
                 ", cdCfgBem='" + cdCfgBem + '\'' +
                 ", nomeNoContrato='" + nomeNoContrato + '\'' +
                 ", vl='" + vl + '\'' +

@@ -15,9 +15,9 @@ spring:
         generate_statistics: true
 
   datasource:
-    url:
-    username:
-    password:
+    url: ${ADENDO_DATABASE_URL}
+    username: ${ADENDO_DATABASE_USERNAME}
+    password: ${ADENDO_DATABASE_PASSWORD}
 
   servlet:
     multipart:
