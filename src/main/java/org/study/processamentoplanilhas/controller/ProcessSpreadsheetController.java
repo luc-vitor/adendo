@@ -2,13 +2,11 @@ package org.study.processamentoplanilhas.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.study.processamentoplanilhas.domain.AnexobbSpreadsheetEntity;
 import org.study.processamentoplanilhas.domain.DemaisBensSpreadsheetEntity;
+import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
 import org.study.processamentoplanilhas.domain.TaaSpreadsheetEntity;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetServiceAnexoBb;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetServiceDemaisBens;
@@ -44,23 +42,24 @@ public class ProcessSpreadsheetController {
         if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");
         }
-
         dtos = processSpreadsheetServiceDemaisBens.processExcelFile(file);
     }
 
     @PostMapping("/taa")
-    public void processTaa(@RequestParam("spreadsheet") MultipartFile file) throws IOException {
+    public void processTaa(@RequestParam("spreadsheet") MultipartFile file) {
         log.info("Receiving new spreadsheets. File name: {} | File ContentType: {}", file.getOriginalFilename(), file.getContentType());
 
         String filename = file.getOriginalFilename();
 
-        List<TaaSpreadsheetEntity> dtos;
-
         if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");
         }
+        processSpreadsheetServiceTaa.processExcelFile(file);
+    }
 
-        dtos = processSpreadsheetServiceTaa.processExcelFile(file);
+    @GetMapping("/taa/status")
+    public ProcessStatusReturnDto processStatusReturnDto() {
+        return processSpreadsheetServiceTaa.getProcessStatus();
     }
 
     @PostMapping("anexo-bb")

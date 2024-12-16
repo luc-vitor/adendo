@@ -107,7 +107,7 @@
 			const fileInput = document.getElementById('fileInput');
 
 			// Function to handle file selection and upload
-			const handleFileUpload = () => {
+			const handleFileUpload = (sucessesMsg) => {
 				if (importedFile) {
 					// Optionally, you can read the file locally using FileReader if needed
 					// For now, we'll upload it directly to the server
@@ -126,17 +126,25 @@
 								importedFile = null;
 								importedFileType = null;
 								if (response.ok) {
-									alert("Dados enviados com sucesso!");
+									alert(sucessesMsg);
 								} else {
-									throw new Error('Erro na resposta do servidor.');
+									return response.json()
 								}
 							})
+
+							.then(jsonResponse => {
+								console.log('Teste resposta', jsonResponse)
+								if(jsonResponse && jsonResponse.status === 400){
+									alert("Erro ao enviar planilha: " + jsonResponse.message)
+								}
+							})
+
 							.catch(error => {
 								importedFile = null;
 								importedFileType = null;
 								console.error('Erro ao enviar os dados:', error);
 								alert("Erro ao enviar os dados.");
-							});
+							})
 				} else {
 					console.warn('Não foi possivel enviar o arquivo pq o importedFile está null')
 				}
@@ -147,8 +155,10 @@
 				if (file) {
 					importedFileType = 'TAA'; // Identifica o tipo de arquivo
 					importedFile = file;
-					alert(`Arquivo ${file.name} importado como TAA`);
-					btnExecutar.disabled = false; // Habilita o botão de executar
+					const result = confirm(`Arquivo ${file.name} importado como TAA`);
+					if (result) {
+						handleFileUpload('Arquivo enviado para processamento! Volte mais tarde.');
+					}
 				}
 			});
 
@@ -158,6 +168,7 @@
 					importedFileType = 'Demais Bens'; // Identifica o tipo de arquivo
 					importedFile = file;
 					alert(`Arquivo ${file.name} importado como Demais Bens`);
+					handleFileUpload()
 					btnExecutar.disabled = false; // Habilita o botão de executar
 				}
 			});
