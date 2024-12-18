@@ -2,9 +2,14 @@ package org.study.processamentoplanilhas.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.study.processamentoplanilhas.domain.DemaisBensSpreadsheetEntity;
+import org.study.processamentoplanilhas.domain.ProcessStatus;
+import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
 import org.study.processamentoplanilhas.repository.DemaisBensSpreadsheetRepository;
 
 import java.io.IOException;
@@ -14,20 +19,36 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
 public class ProcessSpreadsheetServiceDemaisBens {
 
+
+    private final DemaisBensSpreadsheetRepository demaisBensSpreadsheetRepository;
+    private ProcessStatus processStatus = ProcessStatus.FINISHED;
+
     public ProcessSpreadsheetServiceDemaisBens(DemaisBensSpreadsheetRepository demaisBensSpreadsheetRepository) {
         this.demaisBensSpreadsheetRepository = demaisBensSpreadsheetRepository;
     }
 
-    private final DemaisBensSpreadsheetRepository demaisBensSpreadsheetRepository;
+    public ProcessStatusReturnDto getProcessStatus() {
+        return new ProcessStatusReturnDto(processStatus);
+    }
 
-    public List<DemaisBensSpreadsheetEntity> processExcelFile(MultipartFile file) throws IOException {
+    @Transactional
+    public void processExcelFile(MultipartFile file) {
+        if (ProcessStatus.PROCESSING.equals(processStatus)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O arquivo Demais Bens, já está sendo processado! Tente novamente mais tarde.");
+        }
+        Executors.newSingleThreadExecutor().execute(() -> executeProcess(file));
+    }
+
+    private void executeProcess(MultipartFile file) {
         List<DemaisBensSpreadsheetEntity> entities = new ArrayList<>();
         Instant start = Instant.now();
+        processStatus = ProcessStatus.PROCESSING;
 
         log.info("Processando Planilha Demais Bens...");
         try (InputStream is = file.getInputStream()) {
@@ -123,18 +144,30 @@ public class ProcessSpreadsheetServiceDemaisBens {
                     entities.add(entity);
 
                 }
-                }
             }
 
-        log.info("Salvando planilha DEMAIS BENS no banco de dados | qtdLinhas: {}", entities.size());
-        log.info("Demais Bens processada com sucesso!");
-        demaisBensSpreadsheetRepository.saveAll(entities);
-        log.info("Planilha Demais Bens salva no banco com sucesso! | qtdLinhas: {}", entities.size());
-        Instant finish = Instant.now();
-        Duration duration = Duration.between(start, finish);
-        log.info("Tempo de processamento: Segundos={} | Minutos={} | Horas={}",duration.toSeconds(),duration.toMinutes(),duration.toHours());
-        return entities;
 
+            log.info("Planilha Demais Bens foi processada com sucesso!");
+
+            // Bloco de truncate
+//        log.info("Iniciando Truncate!");
+//        taaSpreadsheetRepository.truncate();
+//        log.info("Truncate finalizado!");
+
+            // BLOCO DE SAVE
+            log.info("Salvando planilha DEMAIS BENS no banco de dados | qtdLinhas: {}", entities.size());
+            demaisBensSpreadsheetRepository.saveAll(entities);
+            log.info("Planilha Demais Bens salva com sucesso! | qtdLinhas: {}", entities.size());
+            Instant finish = Instant.now();
+            Duration duration = Duration.between(start, finish);
+            log.info("Tempo de processamento para o salvamento: Segundos={} | Minutos={} | Horas={}", duration.toSeconds(), duration.toMinutes(), duration.toHours());
+            processStatus = ProcessStatus.FINISHED;
+
+        }catch (Exception e) {
+            log.warn("Erro ao tentar processar a planilha.", e);
+            processStatus=ProcessStatus.FAILED;
+            throw new RuntimeException(e);
+        }
     }
 
     private Long getLongCellValue(Cell cell) {

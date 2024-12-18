@@ -40,7 +40,6 @@ public class ProcessSpreadsheetServiceTaa {
         return new ProcessStatusReturnDto(processStatus);
     }
 
-    @Transactional
     public void processExcelFile(MultipartFile file) {
         if (ProcessStatus.PROCESSING.equals(processStatus)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O arquivo TAA, já está sendo processado! Tente novamente mais tarde.");
@@ -52,7 +51,7 @@ public class ProcessSpreadsheetServiceTaa {
         List<TaaSpreadsheetEntity> entities = new ArrayList<>();
         Instant start = Instant.now();
         processStatus = ProcessStatus.PROCESSING;
-        
+
         // Convertendo planilha em JAVA
         log.info("Processando Planilha Taa...");
         try (InputStream is = file.getInputStream()) {
@@ -70,6 +69,7 @@ public class ProcessSpreadsheetServiceTaa {
                 }
 
                 // Pega valores da planilha, na linha
+
                 final Long idAdendo = getLongCellValue(row.getCell(0));
                 final String nroUniv = getStringNotacaoCientifica(row.getCell(1));
                 final String tpoPbms = getStringCellValue(row.getCell(2));
@@ -176,7 +176,7 @@ public class ProcessSpreadsheetServiceTaa {
                 }
             }
 
-            log.info("Planilha Taa processada com sucesso!");
+            log.info("Planilha Taa foi processada com sucesso!");
 
             // Bloco de truncate
             log.info("Iniciando Truncate!");
@@ -184,20 +184,20 @@ public class ProcessSpreadsheetServiceTaa {
             log.info("Truncate finalizado!");
 
             // Bloco do Salvando
-            log.info("Planilha Taa salvando no banco... | qtdLinhas: {}", entities.size());
-            // taaSpreadsheetRepository.saveAll(entities);
-            log.info("Planilha Taa salva no banco | qtdLinhas: {}", entities.size());
+            log.info("Salvando planilha TAA no banco... | qtdLinhas: {}", entities.size());
+            taaSpreadsheetRepository.saveAll(entities);
+            log.info("Planilha Taa salva com sucesso! | qtdLinhas: {}", entities.size());
             Instant finish = Instant.now();
             Duration duration = Duration.between(start, finish);
-            log.info("Tempo de processamento: Segundos={} | Minutos={} | Horas={}",duration.toSeconds(),duration.toMinutes(),duration.toHours());
+            log.info("Tempo de processamento para o salvamento: Segundos={} | Minutos={} | Horas={}",duration.toSeconds(),duration.toMinutes(),duration.toHours());
+            processStatus=ProcessStatus.FINISHED;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.warn("Erro ao tentar processar a planilha.", e);
             processStatus=ProcessStatus.FAILED;
             throw new RuntimeException(e);
-        } finally {
-            processStatus=ProcessStatus.FINISHED;
         }
+
     }
 
     private Long getLongCellValue(Cell cell) {

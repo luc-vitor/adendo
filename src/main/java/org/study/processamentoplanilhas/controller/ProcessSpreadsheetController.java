@@ -4,10 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.study.processamentoplanilhas.domain.AnexobbSpreadsheetEntity;
+import org.study.processamentoplanilhas.domain.AnexoBbSpreadsheetEntity;
 import org.study.processamentoplanilhas.domain.DemaisBensSpreadsheetEntity;
 import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
-import org.study.processamentoplanilhas.domain.TaaSpreadsheetEntity;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetServiceAnexoBb;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetServiceDemaisBens;
 import org.study.processamentoplanilhas.service.ProcessSpreadsheetServiceTaa;
@@ -42,7 +41,12 @@ public class ProcessSpreadsheetController {
         if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");
         }
-        dtos = processSpreadsheetServiceDemaisBens.processExcelFile(file);
+        processSpreadsheetServiceDemaisBens.processExcelFile(file);
+    }
+
+    @GetMapping("/demais-bens/status")
+    public ProcessStatusReturnDto processStatusDemaisBens() {
+        return processSpreadsheetServiceTaa.getProcessStatus();
     }
 
     @PostMapping("/taa")
@@ -58,7 +62,7 @@ public class ProcessSpreadsheetController {
     }
 
     @GetMapping("/taa/status")
-    public ProcessStatusReturnDto processStatusReturnDto() {
+    public ProcessStatusReturnDto processStatusTaa() {
         return processSpreadsheetServiceTaa.getProcessStatus();
     }
 
@@ -68,14 +72,19 @@ public class ProcessSpreadsheetController {
 
         String filename = file.getOriginalFilename();
 
-        List<AnexobbSpreadsheetEntity> dtos;
+        List<AnexoBbSpreadsheetEntity> dtos;
 
         if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");
         }
 
-        dtos = processSpreadsheetServiceAnexoBb.processExcelFile(file);
+        processSpreadsheetServiceAnexoBb.processExcelFile(file);
     }
+
+    @GetMapping("/anexo-bb/status")
+    public ProcessStatusReturnDto processStatusAnexoBb() {
+        return processSpreadsheetServiceAnexoBb.getProcessStatus();
+        }
 }
 
 

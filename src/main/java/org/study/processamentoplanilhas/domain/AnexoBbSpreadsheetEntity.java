@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity(name = "anexo_banco_do_brasil")
-public class AnexobbSpreadsheetEntity {
+public class AnexoBbSpreadsheetEntity {
 
         // Colunas da tabela
         @Id
@@ -70,7 +70,7 @@ public class AnexobbSpreadsheetEntity {
         private String proprietario;
 
         @Column(name = "numeroserie")
-        private String numeroserie;
+        private String numeroSerie;
 
         @Column(name = "quantidade")
         private String quantidade;
@@ -247,12 +247,12 @@ public class AnexobbSpreadsheetEntity {
         this.proprietario = proprietario;
     }
 
-    public String getNumeroserie() {
-        return numeroserie;
+    public String getNumeroSerie() {
+        return numeroSerie;
     }
 
-    public void setNumeroserie(String numeroserie) {
-        this.numeroserie = numeroserie;
+    public void setNumeroSerie(String numeroSerie) {
+        this.numeroSerie = numeroSerie;
     }
 
     public String getQuantidade() {
@@ -318,7 +318,7 @@ public class AnexobbSpreadsheetEntity {
                 ", configuracao='" + configuracao + '\'' +
                 ", componenteDoBem='" + componenteDoBem + '\'' +
                 ", proprietario='" + proprietario + '\'' +
-                ", numeroserie='" + numeroserie + '\'' +
+                ", numeroserie='" + numeroSerie + '\'' +
                 ", quantidade='" + quantidade + '\'' +
                 ", dataEmServico='" + dataEmServico + '\'' +
                 ", dataAbsorcao='" + dataAbsorcao + '\'' +

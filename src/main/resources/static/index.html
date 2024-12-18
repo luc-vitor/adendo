@@ -37,7 +37,6 @@
 		<main class="home" id="home">
 			<img class="imagem-fundo" src="./src/imagens/bbts3.png" alt="Prédio da bbts" />
 
-
 			<div class="informacoes">
 				<div class="lista-de-importacao">
 					<!-- Botão para importar TAA -->
@@ -83,7 +82,6 @@
 					tooltip.style.display = 'none';
 				});
 			}
-
 			configureTooltip('btn-taa', 'tooltip-taa');
 			configureTooltip('btn-demais-bens', 'tooltip-demais-bens');
 			configureTooltip('btn-executar', 'tooltip-exec');
@@ -167,9 +165,8 @@
 				if (file) {
 					importedFileType = 'Demais Bens'; // Identifica o tipo de arquivo
 					importedFile = file;
-					alert(`Arquivo ${file.name} importado como Demais Bens`);
-					handleFileUpload()
-					btnExecutar.disabled = false; // Habilita o botão de executar
+					const result = confirm(`Arquivo ${file.name} importado como Demais Bens`);
+					handleFileUpload('Arquivo enviado para processamento! Volte mais tarde.')
 				}
 			});
 

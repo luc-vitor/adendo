@@ -15,132 +15,177 @@
 		<link rel="stylesheet" href="./src/css/fontes.css" />
 		<link rel="stylesheet" href="./src/css/responsivo.css">
 	</head>
+
 	<body>
-	<header class="cabecalho">
-		<div class="logo">
-			<a href="index.html"><img src="./src/imagens/logomarca.jpg" alt="Simbolo banco do brasil" /></a>
-		</div>
-		<nav>
-			<ul class="menu">
-				<li>
-					<a href="index.html">Início</a>
-				</li>
-				<li>
-					<a href="anexo.html">Anexo BB</a>
-				</li>
-			</ul>
-		</nav>
-	</header>
+		<header class="cabecalho">
+			<div class="logo">
+				<a href="index.html"></a><img src="./src/imagens/logomarca.jpg" alt="Simbolo banco do brasil" /></a>
+			</div>
+			<nav>
+				<ul class="menu">
+					<li>
+						<a href="index.html">Início</a>
+					<li>
+						<a href="anexo.html">Anexo BB</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
 
-	<section class="anexo-bb" id="anexo">
-		<h2 style="color: black" class="titulo">Anexo Banco do Brasil</h2>
+			<!-- Tela principal -->
 
-		<div class="anexo2">
+		<main class="anexo-home" id="anexo">
 			<img class="capa-do-banco" src="./src/imagens/bbts2.png" alt="Predio bbts" />
 
-			<h3>SELECIONE O ANEXO BANCO DO BRASIL DISTRIBUIDO!</h3>
+			<div class="anexo-container">
+				<!--CONTAINER IMPORTAÇÃO-->
 
-			<!-- Botão de Importação ANEXO BB-->
-			<button class="import-button" id="import-anexo">Importar ANEXO BANCO DO BRASIL</button>
-			<input type="file" id="file-input" accept=".xlsx" style="display: none;">
+				<div class="anexo-informacao">
+					<div class="import-anexo">
+						<h3 class="texto-anexo-imp">SELECIONE O ANEXO BANCO DO BRASIL DISTRIBUIDO!</h3>
+						<!-- Botão de Importação ANEXO BB-->
 
-			<h3>EXPORTE PLANILHAS DOS PARQUES PARCEIROS</h3>
+						<button class="btn-anexobb" id="btn-anexobb">Importar ANEXO BANCO DO BRASIL</button>
+						<input type="file" id="input-abexobb" accept=".xlsx" style="display: none;">
+					</div>
 
-			<button class="export-button-anexoBbFinal" data-filename="anexo-bb-final.xlsx">EXPORTAR ANEXO BANCO DO BRASIL FINAL</button>
+					<!--	CONTAINER DE EXPORTAÇÃO	-->
 
-			<!-- Botão de exportação COMODATO-->
-			<button class="export-button-comodato" data-filename="diebold_comodato.xlsx">Exportar DIEBOLD (COMODATO)</button>
+					<div class="export-parque">
 
-			<!--Botão de Exportação DIEBOLD-->
-			<button class="export-button-diebold" data-filename="diebold.xlsx">Exportar DIEBOLD</button>
+						<h3 class="texto-anexo-exp">EXPORTE PLANILHAS DOS PARQUES PARCEIROS</h3>
 
-			<!--Botão de Exportação NCR-->
-			<button class="export-button-nrc" data-filename="ncr.xlsx">Exportar NCR</button>
+						<button class="export-button-anexoBbFinal" data-filename="anexo-bb-final.xlsx">EXPORTAR ANEXO BANCO DO BRASIL FINAL</button>
 
-			<!--Botão de Exportação PERTO-->
-			<button class="export-button-perto" data-filename="perto.xlsx">Exportar PERTO</button>
-		</div>
+						<!-- Botão de exportação COMODATO-->
+						<button class="export-button-comodato" data-filename="diebold_comodato.xlsx">Exportar DIEBOLD (COMODATO)</button>
 
-	</section>
+						<!--Botão de Exportação DIEBOLD-->
+						<button class="export-button-diebold" data-filename="diebold.xlsx">Exportar DIEBOLD</button>
 
-	<!-- Adicionando a biblioteca XLSX -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-	<script>
-		const importButton = document.getElementById('import-anexo');
-		const fileInput = document.getElementById('file-input');
+						<!--Botão de Exportação NCR-->
+						<button class="export-button-nrc" data-filename="ncr.xlsx">Exportar NCR</button>
 
-		// Abre o seletor de arquivos ao clicar no botão
-		importButton.addEventListener('click', () => {
-			fileInput.click();
-		});
+						<!--Botão de Exportação PERTO-->
+						<button class="export-button-perto" data-filename="perto.xlsx">Exportar PERTO</button>
+					</div>
+				</div>
+			</div>
+		</main>
 
-		// Lê o arquivo selecionado
-		fileInput.addEventListener('change', (event) => {
-			const file = event.target.files[0];
+		<!-- Adicionando a biblioteca XLSX -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+		<script>
 
-			// Verifica se um arquivo foi selecionado
-			if (!file) {
-				alert("Nenhum arquivo selecionado.");
-				return;
-			}
+			let importedFileType = null; // Variável para identificar o tipo de arquivo importado
+			let importedFile = null; // Variável para identificar o tipo de arquivo importado
 
-			// Usa FileReader para ler o conteúdo do arquivo
-			const reader = new FileReader();
-			reader.onload = function (e) {
-				const data = new Uint8Array(e.target.result);
-				const workbook = XLSX.read(data, { type: 'array' });
-				// Obtém a primeira aba do Excel
-				const firstSheetName = workbook.SheetNames[0];
-				const worksheet = workbook.Sheets[firstSheetName];
+			const inputAnexoBb = document.getElementById('input-abexobb');
+			const btnAnexoBb = document.getElementById('btn-anexobb');
+			const btnAnexoFinal = document.getElementsByClassName('export-button-anexoBbFinal');
+			const btnComodato = document.getElementsByClassName('export-button-comodato');
+			const btnDibold = document.getElementsByClassName('export-button-diebold');
+			const btnNcr = document.getElementsByClassName('export-button-nrc');
+			const btnPerto = document.getElementsByClassName('export-button-perto');
 
-				// Converte o conteúdo da aba em um array de objetos
-				const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-				// Exibe os dados no console (ou faça outra coisa com os dados)
-				console.log(jsonData);
-				alert('Arquivo importado com sucesso! Confira os dados no console.');
+			// Importação de arquivos
+			btnAnexoBb.addEventListener('click', () => {
+				inputAnexoBb.click();
+			});
+
+			const fileInput = document.getElementById('file-input');
+
+			const handleFileUpload = (sucessesMsg) => {
+				if (importedFile) {
+					// Optionally, you can read the file locally using FileReader if needed
+					// For now, we'll upload it directly to the server
+
+					const formData = new FormData();
+					formData.append('spreadsheet', importedFile);
+					const url = importedFileType === 'anexo-bb';
+					fetch(url, {
+						method: 'POST',
+						body: formData
+					})
+							.then(response => {
+								importedFile = null;
+								importedFileType = null;
+								if (response.ok) {
+									alert(sucessesMsg);
+								} else {
+									return response.json()
+								}
+							})
+
+							.then(jsonResponse => {
+								console.log('Teste resposta', jsonResponse)
+								if(jsonResponse && jsonResponse.status === 400){
+									alert("Erro ao enviar planilha: " + jsonResponse.message)
+								}
+							})
+
+							.catch(error => {
+								importedFile = null;
+								importedFileType = null;
+								console.error('Erro ao enviar os dados:', error);
+								alert("Erro ao enviar os dados.");
+							})
+				} else {
+					console.warn('Não foi possivel enviar o arquivo pq o importedFile está null')
+				}
 			};
 
-			// Lê o arquivo como ArrayBuffer
-			reader.readAsArrayBuffer(file);
-		});
-	</script>
-
-	<script>
-		// Função genérica para exportar arquivos
-		function configureExportButtons(selector, data) {
-			document.querySelectorAll(selector).forEach(button => {
-				button.addEventListener('click', () => {
-					const filename = button.getAttribute('data-filename');
-
-					// Criando a planilha
-					const worksheet = XLSX.utils.aoa_to_sheet(data);
-					const workbook = XLSX.utils.book_new();
-					XLSX.utils.book_append_sheet(workbook, worksheet, "Dados");
-
-					// Salvando o arquivo
-					XLSX.writeFile(workbook, filename);
-
-					alert(`Arquivo ${filename} exportado com sucesso!`);
-				});
+			// Lê o arquivo selecionado
+			inputAnexoBb.addEventListener('change', (event) => {
+				const file = event.target.files[0];
+				if (file) {
+					importedFileType = 'Anexo-bb'; // Identifica o tipo de arquivo
+					importedFile = file;
+					const result = confirm(`Arquivo ${file.name} importado como Anexo banco do Brasil`);
+					if (result) {
+						handleFileUpload('Arquivo enviado para processamento! Volte mais tarde.');
+					}
+				}
 			});
-		}
 
-		// Dados simulados para o arquivo
-		const exportData = [
-			["Coluna 1", "Coluna 2", "Coluna 3"],
-			["Dado 1", "Dado 2", "Dado 3"],
-			["Dado A", "Dado B", "Dado C"]
-		];
+		</script>
 
-		// Configurar botões com classes específicas
-		configureExportButtons('.export-button-nrc', exportData);
-		configureExportButtons('.export-button-comodato', exportData);
-		configureExportButtons('.export-button-diebold', exportData);
-		configureExportButtons('.export-button-perto', exportData);
-		configureExportButtons('.export-button-anexoBbFinal', exportData);
-	</script>
+		<script>
+			// Função genérica para exportar arquivos
+			function configureExportButtons(selector, data) {
+				document.querySelectorAll(selector).forEach(button => {
+					button.addEventListener('click', () => {
+						const filename = button.getAttribute('data-filename');
 
-	<script src="./src/js/index.js"></script>
+						// Criando a planilha
+						const worksheet = XLSX.utils.aoa_to_sheet(data);
+						const workbook = XLSX.utils.book_new();
+						XLSX.utils.book_append_sheet(workbook, worksheet, "Dados");
+
+						// Salvando o arquivo
+						XLSX.writeFile(workbook, filename);
+
+						alert(`Arquivo ${filename} exportado com sucesso!`);
+					});
+				});
+			}
+
+			// Dados simulados para o arquivo
+			const exportData = [
+				["Coluna 1", "Coluna 2", "Coluna 3"],
+				["Dado 1", "Dado 2", "Dado 3"],
+				["Dado A", "Dado B", "Dado C"]
+			];
+
+			// Configurar botões com classes específicas
+			configureExportButtons('.export-button-nrc', exportData);
+			configureExportButtons('.export-button-comodato', exportData);
+			configureExportButtons('.export-button-diebold', exportData);
+			configureExportButtons('.export-button-perto', exportData);
+			configureExportButtons('.export-button-anexoBbFinal', exportData);
+		</script>
+
+		<script src="./src/js/index.js"></script>
 	</body>
 </html>

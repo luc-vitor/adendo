@@ -2,8 +2,13 @@ package org.study.processamentoplanilhas.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import org.study.processamentoplanilhas.domain.AnexobbSpreadsheetEntity;
+import org.study.processamentoplanilhas.domain.AnexoBbSpreadsheetEntity;
 
 @Repository
-public interface AnexoBbSpreadsheetRepository extends CrudRepository<AnexobbSpreadsheetEntity, Long> {
+public interface AnexoBbSpreadsheetRepository extends CrudRepository<AnexoBbSpreadsheetEntity, Long> {
+
+//    @Transactional
+//    @Modifying
+//    @Query(value = "truncate table anexo_banco_do_brasil", nativeQuery = true)
+//    void truncate();
 }

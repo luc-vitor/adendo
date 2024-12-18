@@ -1,5 +1,6 @@
+/*BLOCO DO CABEÇALHO*/
 body {
-	background-color: rgb(252, 252, 48);
+	background-color: transparent;
 	color: #e8e8e8;
 }
 
@@ -12,6 +13,8 @@ body {
 	padding: 0 80px;
 }
 
+
+
 .cabecalho .logo {
 	display: flex;
 	gap: 15px;
@@ -22,6 +25,13 @@ body {
 	gap: 30px;
 }
 
+.lista-de-importacao {
+	display: flex;
+	justify-content: center;
+	gap: 200px; /* Espaço entre os botões */
+	margin-top: 20px;
+}
+
 .cabecalho .menu li a {
 	padding: 30px;
 	color: #e8e8e8;
@@ -30,12 +40,7 @@ body {
 	font-family: "Chalet";
 }
 
-.lista-de-importacao {
-	display: flex;
-	justify-content: center;
-	gap: 200px; /* Espaço entre os botões */
-	margin-top: 20px;
-}
+/*BLOCO DO INDEX*/
 
 button {
 	padding: 10px 20px;
@@ -100,11 +105,6 @@ button {
 	background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.7) 35%, transparent 65%);
 }
 
-.home .imagem-fundo {
-	width: 100%;
-	object-fit: cover;
-}
-
 .home .informacoes {
 	position: absolute;
 	z-index: 1;
@@ -115,8 +115,13 @@ button {
 	gap: 32px;
 	padding: 80px 80px 80px 170px;
 	max-width: 780px;
+
 }
 
+.home .imagem-fundo {
+	width: 100%;
+	object-fit: cover;
+}
 .home .informacoes img {
 	max-width: 150px;
 }
@@ -172,73 +177,77 @@ button {
 	color: #000;
 }
 
-.anexo-bb .capa-do-banco {
-	width: 270px;
-}
+/*BLOCO DO ANEXO - PARQUES*/
 
-.anexo-bb {
-	display: flex;
-	flex-direction: column;
-	text-align: center;
-	padding: 50px;
-	align-items: center;
-}
-
-.anexo-bb .titulo {
-	font-family: "ChaletComprime";
-	font-size: 50px;
-	font-weight: 700;
-	margin-bottom: 50px;
-}
-
-.anexo2 ~h2 {
-	color: black;
-}
-
-.anexo-bb .anexo2 {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color: rgb(51, 51, 189);
-	width: 50%;
-	border-radius: 10px;
-	padding: 80px;
-	gap: 40px;
-	color: #e8e8e8;
-}
-
-.anexo-bb .informacoes {
-	display: flex;
-	flex-direction: column;
-	gap: 30px;
-}
-
-.anexo-bb .informacoes h3 {
-	font-family: "ChaletComprime";
-	font-size: 52px;
-	font-weight: 700;
-}
-
-.anexo-bb .informacoes p {
-	color: #e8e8e8;
-	font-family: "Chalet";
+button {
+	padding: 10px 20px;
 	font-size: 16px;
-	line-height: 1.6;
+	cursor: pointer;
+	border: none;
+	border-radius: 5px;
+	background-color: rgb(51, 51, 189);
+	color: white;
+	transition: background-color 0.3s;
 }
 
-.anexo-bb .informacoes .parques {
+.anexo-home {
 	display: flex;
-	flex-wrap: wrap;
-	gap: 32px;
-	justify-content: center;
+	position: relative;
+	min-height: calc(100vh - 80px);
 }
 
-.btn-anexo,
-.btn-anexo-final,
-.btn-perto,
-.btn-ncr,
-.btn-comodato,
-.btn-dibold {
+.anexo-home::after {
+	content: "";
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.7) 35%, transparent 65%);
+}
+
+.anexo-home .anexo-container {
+	position: absolute;
+	z-index: 1;
+	min-height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 32px;
+	padding: 80px 80px 80px 170px;
+	max-width: 780px;
+
+}
+
+.anexo-home .capa-do-banco {
+	width: 100%;
+	object-fit: cover;
+}
+.anexo-home .anexo-container img {
+	max-width: 150px;
+}
+
+.anexo-home .anexo-container .import-anexo .export-parque {
+	display: flex;
+	gap: 32px;
+}
+
+.anexo-home .anexo-container .texto-anexo-imp {
+	font-family: "ChaletComprime";
+	font-size: 55px;
+}
+
+.anexo-home .anexo-container .texto-anexo-exp {
+	font-family: "ChaletComprime";
+	font-size: 40px;
+	line-height: 1.6;
+	margin: 15px;
+}
+
+.btn-anexobb,
+.export-button-anexoBbFinal,
+.export-button-comodato,
+.export-button-diebold,
+.export-button-nrc,
+.export-button-perto {
 	background-color: rgba(255, 255, 255, 0.1);
 	border: 0.5px solid #fff;
 	border-radius: 4px;
@@ -249,22 +258,34 @@ button {
 	text-transform: uppercase;
 	width: 100%;
 	transition: all 0.3s ease-in;
+	color: #e8e8e8;
+	margin: 10px;
 }
 
-.btn-executar:hover,
-.btn-perto:hover,
-.btn-comodato:hover,
-.btn-dibold:hover,
-.btn-ncr:hover,
-.btn-anexo-final:hover,
-.btn-anexo:hover {
+.btn-anexobb:hover {
 	background-color: #fff;
 	color: #000;
 }
 
-button:disabled {
-	background-color: #bdc3c7;
-	cursor: not-allowed;
+.export-button-anexoBbFinal:hover {
+	background-color: #fff;
+	color: #000;
+}
+.export-button-comodato:hover {
+	background-color: #fff;
+	color: #000;
+}
+.export-button-diebold:hover {
+	background-color: #fff;
+	color: #000;
+}
+.export-button-nrc:hover {
+	background-color: #fff;
+	color: #000;
+}
+.export-button-perto:hover {
+	background-color: #fff;
+	color: #000;
 }
 
 .tooltip {

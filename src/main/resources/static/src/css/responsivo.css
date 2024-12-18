@@ -22,26 +22,26 @@
     font-size: 40px;
   }
 
-  .anexo-bb .anexo2 {
+  .anexo-home .btn-anexobb {
     width: 70%;
   }
 }
 
 @media (max-width: 768px) {
-  .anexo-bb {
+  .anexo-home {
     padding: 30px;
   }
 
-  .anexo-bb .anexo2 {
+  .anexo-home .btn-anexobb {
     padding: 80px 20px;
     width: 100%;
   }
 
-  .anexo-bb .informacoes h3 {
+  .anexo-home .informacoes h3 {
     font-size: 35px;
   }
 
-  .anexo-bb .informacoes .parques {
+  .anexo-home .informacoes .parques {
     flex-direction: column;
   }
 
@@ -60,7 +60,7 @@
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.4) 100%, transparent 65%);
   }
 
-  .anexo-bb .anexo2 .capa-do-banco {
+  .anexo-home .btn-anexobb .capa-do-banco {
     max-width: 80%;
   }
 }
