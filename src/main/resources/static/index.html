@@ -40,7 +40,7 @@
 			<div class="informacoes">
 				<div class="lista-de-importacao">
 					<!-- Botão para importar TAA -->
-					<button class="btn-taa" id="btn-taa">Importar TAA</button>
+					<button class="btn-taa" id="btn-taa" disabled>CARREGANDO...</button>
 					<input type="file" id="input-taa" accept=".xlsx" style="display: none;">
 					<div class="tooltip" id="tooltip-taa">Clique para importar o arquivo TAA</div>
 
@@ -66,8 +66,44 @@
 
 		<script>
 
+			// Referências aos elementos
+			const inputTAA = document.getElementById('input-taa');
+			const inputDemaisBens = document.getElementById('input-demais-bens');
+			const btnTAA = document.getElementById('btn-taa');
+			const btnDemaisBens = document.getElementById('btn-demais-bens');
+			const btnExecutar = document.getElementById('btn-executar');
+
 			let importedFileType = null; // Variável para identificar o tipo de arquivo importado
 			let importedFile = null; // Variável para identificar o tipo de arquivo importado
+
+			fetch('/api/v1/process/taa/status')
+					.then(response => {
+						if(response.ok){
+							return response.json();
+						}
+					})
+					.then(responseJson => {
+						const status = responseJson.processStatus;
+						if (status === 'FINISHED' || 'FAILED'){
+							btnTAA.removeAttribute('disabled')
+						}
+
+						if (status === 'FINISHED'){
+							btnTAA.innerText = 'Importar TAA'
+						}
+
+						if (status === 'PROCESSING'){
+							btnTAA.innerText = 'PROCESSANDO TAA'
+						}
+
+						if (status === 'FAILED'){
+							btnTAA.innerText = 'FALHA AO PROCESSAR TAA'
+						}
+						// todo: tratar quando der erro
+					})
+
+
+			// quando for FINISHED remover o desabled / quando estiver em proceesing bloqueia o blotão
 
 			// Configuração de tooltips
 			function configureTooltip(buttonId, tooltipId) {
@@ -85,13 +121,6 @@
 			configureTooltip('btn-taa', 'tooltip-taa');
 			configureTooltip('btn-demais-bens', 'tooltip-demais-bens');
 			configureTooltip('btn-executar', 'tooltip-exec');
-
-			// Referências aos elementos
-			const inputTAA = document.getElementById('input-taa');
-			const inputDemaisBens = document.getElementById('input-demais-bens');
-			const btnTAA = document.getElementById('btn-taa');
-			const btnDemaisBens = document.getElementById('btn-demais-bens');
-			const btnExecutar = document.getElementById('btn-executar');
 
 			// Importação de arquivos
 			btnTAA.addEventListener('click', () => {
@@ -121,10 +150,15 @@
 						body: formData
 					})
 							.then(response => {
-								importedFile = null;
-								importedFileType = null;
 								if (response.ok) {
+									console.log('Teste: ', importedFileType)
+									if (importedFileType === 'TAA'){
+										btnTAA.innerText = 'PROCESSANDO TAA'
+										btnTAA.setAttribute('disabled','disabled')
+									}
 									alert(sucessesMsg);
+									importedFile = null;
+									importedFileType = null;
 								} else {
 									return response.json()
 								}
@@ -135,6 +169,8 @@
 								if(jsonResponse && jsonResponse.status === 400){
 									alert("Erro ao enviar planilha: " + jsonResponse.message)
 								}
+								importedFile = null;
+								importedFileType = null;
 							})
 
 							.catch(error => {

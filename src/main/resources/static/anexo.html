@@ -101,9 +101,11 @@
 					// Optionally, you can read the file locally using FileReader if needed
 					// For now, we'll upload it directly to the server
 
+
+					// erro deve estar aqui
 					const formData = new FormData();
 					formData.append('spreadsheet', importedFile);
-					const url = importedFileType === 'anexo-bb';
+					const url = '/api/v1/process/anexo-bb';
 					fetch(url, {
 						method: 'POST',
 						body: formData

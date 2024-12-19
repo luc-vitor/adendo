@@ -66,13 +66,11 @@ public class ProcessSpreadsheetController {
         return processSpreadsheetServiceTaa.getProcessStatus();
     }
 
-    @PostMapping("anexo-bb")
-    public void processAnexoBb(@RequestParam("spreadsheet") MultipartFile file) throws IOException {
+    @PostMapping("/anexo-bb")
+    public void processAnexoBb(@RequestParam("spreadsheet") MultipartFile file) {
         log.info("Receiving new spreadsheets. File name: {} | File ContentType: {}", file.getOriginalFilename(), file.getContentType());
 
         String filename = file.getOriginalFilename();
-
-        List<AnexoBbSpreadsheetEntity> dtos;
 
         if (!filename.endsWith(".xlsx") && !filename.endsWith(".xls")) {
             throw new UnsupportedOperationException("Spreadsheet file extension is not supported");

@@ -1,6 +1,7 @@
 package org.study.processamentoplanilhas.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import org.study.processamentoplanilhas.domain.ProcessStatus;
 import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
 import org.study.processamentoplanilhas.repository.DemaisBensSpreadsheetRepository;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
@@ -50,9 +53,21 @@ public class ProcessSpreadsheetServiceDemaisBens {
         Instant start = Instant.now();
         processStatus = ProcessStatus.PROCESSING;
 
+        ZipSecureFile.setMinInflateRatio(0.001); // Configuração para evitar erros de descompressão
+        ZipSecureFile.setMaxTextSize(10 * 1024 * 1024); // Tamanho máximo do texto
+        ZipSecureFile.setMaxEntrySize(Long.MAX_VALUE);  // Tamanho máximo de entrada
+
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("uploaded-", ".xlsx");
+            file.transferTo(tempFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         log.info("Processando Planilha Demais Bens...");
-        try (InputStream is = file.getInputStream()) {
-            Workbook workbook = WorkbookFactory.create(is);
+        try (FileInputStream fis = new FileInputStream(tempFile)) {
+            Workbook workbook = WorkbookFactory.create(fis);
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
             boolean isFirstRow = true;
