@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.study.processamentoplanilhas.domain.AnexoBbSpreadsheetEntity;
+import org.study.processamentoplanilhas.domain.AnexoBbSpreadsheetEntity52;
 import org.study.processamentoplanilhas.domain.ProcessStatus;
 import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
-import org.study.processamentoplanilhas.repository.AnexoBbSpreadsheetRepository;
+import org.study.processamentoplanilhas.repository.AnexoBbSpreadsheetRepository52;
 
 import java.io.InputStream;
 import java.time.Duration;
@@ -22,13 +22,13 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
-public class ProcessSpreadsheetServiceAnexoBb {
+public class ProcessSpreadsheetServiceAnexoBb52 {
 
-    private final AnexoBbSpreadsheetRepository anexoBbSpreadsheetRepository;
+    private final AnexoBbSpreadsheetRepository52 anexoBbSpreadsheetRepository52;
     private ProcessStatus processStatus = ProcessStatus.FINISHED;
 
-    public ProcessSpreadsheetServiceAnexoBb(AnexoBbSpreadsheetRepository anexoBbSpreadsheetRepository) {
-        this.anexoBbSpreadsheetRepository = anexoBbSpreadsheetRepository;
+    public ProcessSpreadsheetServiceAnexoBb52(AnexoBbSpreadsheetRepository52 anexoBbSpreadsheetRepository52) {
+        this.anexoBbSpreadsheetRepository52 = anexoBbSpreadsheetRepository52;
     }
 
     public ProcessStatusReturnDto getProcessStatus() {
@@ -38,19 +38,19 @@ public class ProcessSpreadsheetServiceAnexoBb {
     @Transactional
     public void processExcelFile(MultipartFile file) {
         if (ProcessStatus.PROCESSING.equals(processStatus)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anexo bb, já está sendo processado! Tente novamente mais tarde.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anexo Banco do Brasil 52, já está sendo processado! Tente novamente mais tarde.");
         }
         Executors.newSingleThreadExecutor().execute(() -> executeProcess(file));
     }
 
     private void executeProcess(MultipartFile file) {
-        List<AnexoBbSpreadsheetEntity> entities = new ArrayList<>();
+        List<AnexoBbSpreadsheetEntity52> entities = new ArrayList<>();
         Instant start = Instant.now();
         processStatus = ProcessStatus.PROCESSING;
 
         // CONVERTENDO A PLANILHA PARA JAVA
 
-        log.info("Processando Planilha Anexo Banco do Brasil...");
+        log.info("Processando Planilha Anexo Banco do Brasil 52...");
         try (InputStream is = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
@@ -126,7 +126,7 @@ public class ProcessSpreadsheetServiceAnexoBb {
                 // SETA OS VALORES DA LINHA EM UM OBJETO
 
                 if (hasReferencia || hasNumeroBem || hasNomeNoContrato || hasGrupo || hasModelo || hasFornecedor || hasContrato || hasCriticidade || hasValor || hasVlrParceiros || hasAgencia || hasSag || hasLat || hasCatFaturamento || hasCatAtendimento || hasLatServico || hasSetmat || hasConfiguracao || hasComponenteDoBem || hasProprietario || hasNumeroSerie || hasQuantidade || hasDataEmServico || hasDataAbsorcao || hasEmpregado || hasTimeRecurso) {
-                    AnexoBbSpreadsheetEntity entity = new AnexoBbSpreadsheetEntity();
+                    AnexoBbSpreadsheetEntity52 entity = new AnexoBbSpreadsheetEntity52();
                     entity.setReferencia(referencia);
                     entity.setNumeroBem(numeroBem);
                     entity.setNomeNoContrato(nomeNoContrato);
@@ -157,7 +157,7 @@ public class ProcessSpreadsheetServiceAnexoBb {
                 }
             }
 
-            log.info("Planilha Anexo Banco do Brasil processada com sucesso!");
+            log.info("Planilha Anexo Banco do Brasil 52 processada com sucesso!");
 
             // Bloco de truncate
 
@@ -167,9 +167,9 @@ public class ProcessSpreadsheetServiceAnexoBb {
 
             // Bloco do Salvando
 
-            log.info("Planilha Anexo Bando do Brasil salvando no banco... | qtdLinhas: {}", entities.size());
-            anexoBbSpreadsheetRepository.saveAll(entities);
-            log.info("Planilha Anexo Banco do Brasil salva no banco | qtdLinhas: {}", entities.size());
+            log.info("Planilha Anexo Bando do Brasil 52 salvando no banco... | qtdLinhas: {}", entities.size());
+            anexoBbSpreadsheetRepository52.saveAll(entities);
+            log.info("Planilha Anexo Banco do Brasil 52 salva no banco | qtdLinhas: {}", entities.size());
             Instant finish = Instant.now();
             Duration duration = Duration.between(start, finish);
             log.info("Tempo de processamento: Segundos={} | Minutos={} | Horas={}",duration.toSeconds(),duration.toMinutes(),duration.toHours());

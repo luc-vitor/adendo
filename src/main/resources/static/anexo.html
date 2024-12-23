@@ -19,7 +19,7 @@
 	<body>
 		<header class="cabecalho">
 			<div class="logo">
-				<a href="index.html"></a><img src="./src/imagens/logomarca.jpg" alt="Simbolo banco do brasil" /></a>
+				<a href="index.html"><img src="./src/imagens/logomarca.jpg" alt="Simbolo banco do brasil" ></a>
 			</div>
 			<nav>
 				<ul class="menu">
@@ -45,8 +45,12 @@
 						<h3 class="texto-anexo-imp">SELECIONE O ANEXO BANCO DO BRASIL DISTRIBUIDO!</h3>
 						<!-- Botão de Importação ANEXO BB-->
 
-						<button class="btn-anexobb" id="btn-anexobb">Importar ANEXO BANCO DO BRASIL</button>
+						<button class="btn-anexobb" id="btn-anexobb">CARREGANDO...</button>
 						<input type="file" id="input-abexobb" accept=".xlsx" style="display: none;">
+
+						<button class="btn-anexobb52" id="btn-anexobb52">CARREGANDO...</button>
+						<input type="file" id="input-abexobb52" accept=".xlsx" style="display: none;">
+
 					</div>
 
 					<!--	CONTAINER DE EXPORTAÇÃO	-->
@@ -82,16 +86,72 @@
 
 			const inputAnexoBb = document.getElementById('input-abexobb');
 			const btnAnexoBb = document.getElementById('btn-anexobb');
+			const inputAnexoBb52 = document.getElementById('input-abexobb52');
+			const btnAnexoBb52 = document.getElementById('btn-anexobb52');
 			const btnAnexoFinal = document.getElementsByClassName('export-button-anexoBbFinal');
 			const btnComodato = document.getElementsByClassName('export-button-comodato');
 			const btnDibold = document.getElementsByClassName('export-button-diebold');
 			const btnNcr = document.getElementsByClassName('export-button-nrc');
 			const btnPerto = document.getElementsByClassName('export-button-perto');
 
+			fetch('/api/v1/process/anexo-bb/status')
+					.then(response => {
+						if(response.ok){
+							return response.json();
+						}
+					})
+					.then(responseJson => {
+						const status = responseJson.processStatus;
+						if (status === 'FINISHED' || 'FAILED'){
+							btnAnexoBb.removeAttribute('disabled')
+						}
+
+						if (status === 'FINISHED'){
+							btnAnexoBb.innerText = 'Importar Anexo Banco do Brasil'
+						}
+
+						if (status === 'PROCESSING'){
+							btnAnexoBb.innerText = 'PROCESSANDO Anexo Banco do Brasil'
+						}
+
+						if (status === 'FAILED'){
+							btnAnexoBb.innerText = 'FALHA AO PROCESSAR Anexo Banco do Brasil'
+						}
+						// todo: tratar quando der erro
+					})
+			fetch('/api/v1/process/anexo-bb52/status')
+					.then(response => {
+						if(response.ok){
+							return response.json();
+						}
+					})
+					.then(responseJson => {
+						const status = responseJson.processStatus;
+						if (status === 'FINISHED' || 'FAILED'){
+							btnAnexoBb52.removeAttribute('disabled')
+						}
+
+						if (status === 'FINISHED'){
+							btnAnexoBb52.innerText = 'Importar Anexo Banco do Brasil 52'
+						}
+
+						if (status === 'PROCESSING'){
+							btnAnexoBb52.innerText = 'PROCESSANDO Anexo Banco do Brasil 52'
+						}
+
+						if (status === 'FAILED'){
+							btnAnexoBb52.innerText = 'FALHA AO PROCESSAR Anexo Banco do Brasil 52'
+						}
+						// todo: tratar quando der erro
+					})
+
 
 			// Importação de arquivos
 			btnAnexoBb.addEventListener('click', () => {
 				inputAnexoBb.click();
+			});
+			btnAnexoBb52.addEventListener('click', () => {
+				inputAnexoBb52.click();
 			});
 
 			const fileInput = document.getElementById('file-input');
@@ -105,7 +165,9 @@
 					// erro deve estar aqui
 					const formData = new FormData();
 					formData.append('spreadsheet', importedFile);
-					const url = '/api/v1/process/anexo-bb';
+					const url = importedFileType === 'anexo-bb' ?
+							'/api/v1/process/anexo-bb' :
+							'/api/v1/process/anexo-bb52';
 					fetch(url, {
 						method: 'POST',
 						body: formData
@@ -145,6 +207,18 @@
 					importedFileType = 'Anexo-bb'; // Identifica o tipo de arquivo
 					importedFile = file;
 					const result = confirm(`Arquivo ${file.name} importado como Anexo banco do Brasil`);
+					if (result) {
+						handleFileUpload('Arquivo enviado para processamento! Volte mais tarde.');
+					}
+				}
+			});
+
+			inputAnexoBb52.addEventListener('change', (event) => {
+				const file = event.target.files[0];
+				if (file) {
+					importedFileType = 'Anexo-bb52'; // Identifica o tipo de arquivo
+					importedFile = file;
+					const result = confirm(`Arquivo ${file.name} importado como Anexo banco do Brasil 52`);
 					if (result) {
 						handleFileUpload('Arquivo enviado para processamento! Volte mais tarde.');
 					}

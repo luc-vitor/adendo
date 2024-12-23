@@ -23,7 +23,7 @@ body {
 	gap: 30px;
 }
 
-.lista-de-importacao {
+.lista-de-importacao .lista-de-importacao2 {
 	display: flex;
 	justify-content: center;
 	gap: 200px; /* Espaço entre os botões */
@@ -124,7 +124,7 @@ button {
 	max-width: 150px;
 }
 
-.home .informacoes .lista-de-importacao {
+.home .informacoes .lista-de-importacao .lista-de-importacao2 {
 	display: flex;
 	gap: 32px;
 }
@@ -140,7 +140,8 @@ button {
 	line-height: 1.6;
 }
 
-.btn-exec-inicial,
+#btn-executar,
+#btn-executar2,
 .btn-demais-bens,
 .btn-taa,
 .btn-anexo {
@@ -155,13 +156,18 @@ button {
 	width: 50%;
 	transition: all 0.3s ease-in;
 	color: #e8e8e8;
-}
-
-.btn-exec-inicial {
-	width: 100%;
+	margin-right: 15px;
 }
 
 .btn-taa:hover {
+	background-color: #fff;
+	color: #000;
+}
+#btn-executar:hover {
+	background-color: #fff;
+	color: #000;
+}
+#btn-executar2:hover {
 	background-color: #fff;
 	color: #000;
 }
@@ -177,16 +183,7 @@ button {
 
 /*BLOCO DO ANEXO - PARQUES*/
 
-button {
-	padding: 10px 20px;
-	font-size: 16px;
-	cursor: pointer;
-	border: none;
-	border-radius: 5px;
-	background-color: rgb(51, 51, 189);
-	color: white;
-	transition: background-color 0.3s;
-}
+
 
 .anexo-home {
 	display: flex;
@@ -240,6 +237,7 @@ button {
 	margin: 15px;
 }
 
+.btn-anexobb52,
 .btn-anexobb,
 .export-button-anexoBbFinal,
 .export-button-comodato,
@@ -261,6 +259,10 @@ button {
 }
 
 .btn-anexobb:hover {
+	background-color: #fff;
+	color: #000;
+}
+.btn-anexobb52:hover {
 	background-color: #fff;
 	color: #000;
 }

@@ -38,27 +38,38 @@
 			<img class="imagem-fundo" src="./src/imagens/bbts3.png" alt="Prédio da bbts" />
 
 			<div class="informacoes">
+
+				<!-- Textos da página principal  -->
+				<h1 class="titulo">Faça a importação das suas planilhas</h1>
+				<p class="texto">Veja ela sendo tratada automaticamente</p>
+
 				<div class="lista-de-importacao">
 					<!-- Botão para importar TAA -->
 					<button class="btn-taa" id="btn-taa" disabled>CARREGANDO...</button>
 					<input type="file" id="input-taa" accept=".xlsx" style="display: none;">
 					<div class="tooltip" id="tooltip-taa">Clique para importar o arquivo TAA</div>
 
+					<!-- Botão de executar -->
+					<button id="btn-executar" disabled>DOWNLOAD TAA</button>
+					<div class="tooltip" id="tooltip-exec">O arquivo TAA deve ser importado para liberar o DOWNLOAD</div>
+
+				</div>
+				<div class="lista de importacao2">
 					<!-- Botão para importar DEMAIS BENS -->
 					<button class="btn-demais-bens" id="btn-demais-bens">Importar DEMAIS BENS</button>
 					<input type="file" id="input-demais-bens" accept=".xlsx" style="display: none;">
 					<div class="tooltip" id="tooltip-demais-bens">Clique para importar o arquivo Demais Bens</div>
+
+					<!-- Botão de executar -->
+					<button id="btn-executar2" disabled>DOWNLOAD DEMAIS BENS</button>
+					<div class="tooltip" id="tooltip-exec-2">O arquivo DEMAIS BENS deve ser impotado para liberar o DOWNLOAD </div>
+
 				</div>
 
-				<!-- Botão de executar -->
-				<button id="btn-executar" disabled>Executar</button>
-				<div class="tooltip" id="tooltip-exec">Importe um arquivo para habilitar essa opção</div>
-
-				<!-- Textos da página principal  -->
-				<h1 class="titulo">Faça a importação das suas planilhas</h1>
-				<p class="texto">Veja ela sendo tratada automaticamente</p>
-					<!-- Botão para levar para página anexo bb -->
+				<!-- Botão para levar para página anexo bb -->
+				<p>CLIQUE NO BOTÃO ABAIXO PARA SER DIRECIONADO A AREA DOS ANEXOS</p>
 				<a class="btn-anexo" href="anexo.html">Anexo BB</a>
+
 			</div>
 		</main>
 
@@ -72,6 +83,7 @@
 			const btnTAA = document.getElementById('btn-taa');
 			const btnDemaisBens = document.getElementById('btn-demais-bens');
 			const btnExecutar = document.getElementById('btn-executar');
+			const btnExecutar2 = document.getElementById('btn-executar2');
 
 			let importedFileType = null; // Variável para identificar o tipo de arquivo importado
 			let importedFile = null; // Variável para identificar o tipo de arquivo importado
@@ -102,8 +114,30 @@
 						// todo: tratar quando der erro
 					})
 
+			fetch('/api/v1/process/demais-bens/status')
+					.then(response => {
+						if(response.ok){
+							return response.json();
+						}
+					})
+					.then(responseJson => {
+						const status = responseJson.processStatus;
+						if (status === 'FINISHED' || 'FAILED'){
+							btnDemaisBens.removeAttribute('disabled')
+						}
 
-			// quando for FINISHED remover o desabled / quando estiver em proceesing bloqueia o blotão
+						if (status === 'FINISHED'){
+							btnDemaisBens.innerText = 'Importar Demais Bens'
+						}
+
+						if (status === 'PROCESSING'){
+							btnDemaisBens.innerText = 'PROCESSANDO DEMAIS BENS'
+						}
+
+						if (status === 'FAILED'){
+							btnDemaisBens.innerText = 'FALHA AO PROCESSAR Demais Bens'
+						}
+					})
 
 			// Configuração de tooltips
 			function configureTooltip(buttonId, tooltipId) {
@@ -121,6 +155,7 @@
 			configureTooltip('btn-taa', 'tooltip-taa');
 			configureTooltip('btn-demais-bens', 'tooltip-demais-bens');
 			configureTooltip('btn-executar', 'tooltip-exec');
+			configureTooltip('btn-executar2', 'tooltip-exec-2');
 
 			// Importação de arquivos
 			btnTAA.addEventListener('click', () => {
@@ -164,7 +199,23 @@
 								}
 							})
 
+							.then(response => {
+								if (response.ok) {
+									console.log('Teste: ', importedFileType)
+									if (importedFileType === 'Demais-bens'){
+										btnDemaisBens.innerText = 'PROCESSANDO DEMAIS BENS'
+										btnDemaisBens.setAttribute('disabled','disabled')
+									}
+									alert(sucessesMsg);
+									importedFile = null;
+									importedFileType = null;
+								} else {
+									return response.json()
+								}
+							})
+
 							.then(jsonResponse => {
+
 								console.log('Teste resposta', jsonResponse)
 								if(jsonResponse && jsonResponse.status === 400){
 									alert("Erro ao enviar planilha: " + jsonResponse.message)

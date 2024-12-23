@@ -25,6 +25,8 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+      enabled: true
+      location: './temp'
   application:
     name: processamento-planilhas
   main:
