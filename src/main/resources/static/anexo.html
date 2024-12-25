@@ -71,7 +71,7 @@
 						<button class="export-button-nrc" data-filename="ncr.xlsx">Exportar NCR</button>
 
 						<!--Botão de Exportação PERTO-->
-						<button class="export-button-perto" data-filename="perto.xlsx">Exportar PERTO</button>
+						<button class="export-button-perto" onclick="donwloadPerto()">Exportar PERTO</button>
 					</div>
 				</div>
 			</div>
@@ -225,41 +225,26 @@
 				}
 			});
 
-		</script>
-
-		<script>
-			// Função genérica para exportar arquivos
-			function configureExportButtons(selector, data) {
-				document.querySelectorAll(selector).forEach(button => {
-					button.addEventListener('click', () => {
-						const filename = button.getAttribute('data-filename');
-
-						// Criando a planilha
-						const worksheet = XLSX.utils.aoa_to_sheet(data);
-						const workbook = XLSX.utils.book_new();
-						XLSX.utils.book_append_sheet(workbook, worksheet, "Dados");
-
-						// Salvando o arquivo
-						XLSX.writeFile(workbook, filename);
-
-						alert(`Arquivo ${filename} exportado com sucesso!`);
-					});
-				});
+			function donwloadPerto () {
+				fetch("api/v1/process/perto-atm")
+						.then(response => {
+							if (!response.ok){
+								console.error("Erro ao baixar aquivo", response)
+								throw new Error("Erro ao obter arquivo!")
+							}
+							return response.blob()
+						})
+						.then(blob => {
+							Object.assign(document.createElement('a'), {
+								href: window.URL.createObjectURL(blob),
+								download: 'PertoAtm.xls',
+							}).click();
+						})
+						.catch(error => {
+							console.error("Donwload falhou!", error)
+							alert("Falha ao baixar aquivo, tente novamente!")
+						})
 			}
-
-			// Dados simulados para o arquivo
-			const exportData = [
-				["Coluna 1", "Coluna 2", "Coluna 3"],
-				["Dado 1", "Dado 2", "Dado 3"],
-				["Dado A", "Dado B", "Dado C"]
-			];
-
-			// Configurar botões com classes específicas
-			configureExportButtons('.export-button-nrc', exportData);
-			configureExportButtons('.export-button-comodato', exportData);
-			configureExportButtons('.export-button-diebold', exportData);
-			configureExportButtons('.export-button-perto', exportData);
-			configureExportButtons('.export-button-anexoBbFinal', exportData);
 		</script>
 
 		<script src="./src/js/index.js"></script>

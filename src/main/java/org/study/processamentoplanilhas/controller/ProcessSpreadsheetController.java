@@ -1,6 +1,10 @@
 package org.study.processamentoplanilhas.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +13,7 @@ import org.study.processamentoplanilhas.domain.DemaisBensSpreadsheetEntity;
 import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
 import org.study.processamentoplanilhas.service.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,13 +28,19 @@ public class ProcessSpreadsheetController {
     private final ProcessSpreadsheetServiceAnexoBb processSpreadsheetServiceAnexoBb;
     private final ProcessSpreadsheetServiceAnexoBb52 processSpreadsheetServiceAnexoBb52;
     private final ProcessSpreadsheetServicePerto processSpreadsheetServicePerto;
+    private final ProcessSpreadsheetServiceNcr processSpreadsheetServiceNcr;
+    private final ProcessSpreadsheetServiceDiebold processSpreadsheetServiceDiebold;
+    private final ProcessSpreadsheetServiceComodato processSpreadsheetServiceComodato;
 
-    public ProcessSpreadsheetController(final ProcessSpreadsheetServiceDemaisBens processSpreadsheetServiceDemaisBens, final ProcessSpreadsheetServiceTaa processSpreadsheetServiceTaa, final ProcessSpreadsheetServiceAnexoBb processSpreadsheetServiceAnexoBb, final ProcessSpreadsheetServiceAnexoBb52 processSpreadsheetServiceAnexoBb52, final ProcessSpreadsheetServicePerto processSpreadsheetServicePerto) {
+    public ProcessSpreadsheetController(final ProcessSpreadsheetServiceDemaisBens processSpreadsheetServiceDemaisBens, final ProcessSpreadsheetServiceTaa processSpreadsheetServiceTaa, final ProcessSpreadsheetServiceAnexoBb processSpreadsheetServiceAnexoBb, final ProcessSpreadsheetServiceAnexoBb52 processSpreadsheetServiceAnexoBb52, final ProcessSpreadsheetServicePerto processSpreadsheetServicePerto, final ProcessSpreadsheetServiceNcr processSpreadsheetServiceNcr, final ProcessSpreadsheetServiceDiebold processSpreadsheetServiceDiebold, final ProcessSpreadsheetServiceComodato processSpreadsheetServiceComodato) {
         this.processSpreadsheetServiceDemaisBens = processSpreadsheetServiceDemaisBens;
         this.processSpreadsheetServiceTaa = processSpreadsheetServiceTaa;
         this.processSpreadsheetServiceAnexoBb = processSpreadsheetServiceAnexoBb;
         this.processSpreadsheetServiceAnexoBb52 = processSpreadsheetServiceAnexoBb52;
         this.processSpreadsheetServicePerto = processSpreadsheetServicePerto;
+        this.processSpreadsheetServiceNcr = processSpreadsheetServiceNcr;
+        this.processSpreadsheetServiceDiebold = processSpreadsheetServiceDiebold;
+        this.processSpreadsheetServiceComodato = processSpreadsheetServiceComodato;
     }
 
     @PostMapping("/demais-bens")
@@ -105,9 +116,40 @@ public class ProcessSpreadsheetController {
     }
 
     @GetMapping("/perto-atm")
-    public void obterPertoAtm(){
-        processSpreadsheetServicePerto.getSpreadsheet();
+    public ResponseEntity<byte[]> obterPertoAtm() {
+        try(HSSFWorkbook wb = processSpreadsheetServicePerto.getSpreadsheet()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+            byte[] content = baos.toByteArray();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=pertoAtm.xls")
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .body(content);
+
+
+        } catch (IOException e) {
+            log.warn("Falha ao obter planilha pertoAtm", e);
+            throw new RuntimeException(e);
+        }
+
     }
+
+    @GetMapping("/ncr-atm")
+    public void obterNcrAtm() {
+        processSpreadsheetServiceNcr.getSpreadsheet();
+    }
+
+    @GetMapping("/diebold-atm")
+    public void obterDieboldAtm() {
+        processSpreadsheetServiceDiebold.getSpreadsheet();
+    }
+
+    @GetMapping("/comodato-atm")
+    public void obterComodatodAtm() {
+        processSpreadsheetServiceComodato.getSpreadsheet();
+    }
+
 }
 
 

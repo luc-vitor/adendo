@@ -4,8 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Entity(name = "tb_perto_atm")
-public class PertoAtmEntity {
+@Entity(name = "tb_ncr_atm")
+public class NcrAtmEntity {
 
     @Id
     @Column(name = "nro_univ")
@@ -81,7 +81,7 @@ public class PertoAtmEntity {
     private String tempoAquisicao;
 
     @Column(name = "lote")
-    private Long lote;
+    private String lote;
 
     @Column(name = "valor_residual")
     private String valorResidual;
@@ -281,11 +281,11 @@ public class PertoAtmEntity {
         this.tempoAquisicao = tempoAquisicao;
     }
 
-    public Long getLote() {
+    public String getLote() {
         return lote;
     }
 
-    public void setLote(Long lote) {
+    public void setLote(String lote) {
         this.lote = lote;
     }
 
@@ -307,7 +307,7 @@ public class PertoAtmEntity {
 
     @Override
     public String toString() {
-        return "PertoAtmEntity{" +
+        return "NcrAtmEntity{" +
                 "nroUniv='" + nroUniv + '\'' +
                 ", nomeDoContrato='" + nomeDoContrato + '\'' +
                 ", fornecedor='" + fornecedor + '\'' +
