@@ -27,40 +27,40 @@
   }
 }
 
-@media (max-width: 768px) {
-  .anexo-home {
-    padding: 30px;
-  }
+/*@media (max-width: 1024px) {*/
+/*  .anexo-home {*/
+/*    padding: 30px;*/
+/*  }*/
 
-  .anexo-home .btn-anexobb {
-    padding: 80px 20px;
-    width: 100%;
-  }
+/*  .anexo-home .btn-anexobb {*/
+/*    padding: 80px 20px;*/
+/*    width: 100%;*/
+/*  }*/
 
-  .anexo-home .informacoes h3 {
-    font-size: 35px;
-  }
+/*  .anexo-home .informacoes h3 {*/
+/*    font-size: 35px;*/
+/*  }*/
 
-  .anexo-home .informacoes .parques {
-    flex-direction: column;
-  }
+/*  .anexo-home .informacoes .parques {*/
+/*    flex-direction: column;*/
+/*  }*/
 
-  .btn-parqueParceiro {
-    margin-top: 15px;
-    padding: 15px;
-  }
+/*  .btn-parqueParceiro {*/
+/*    margin-top: 15px;*/
+/*    padding: 15px;*/
+/*  }*/
 
-  .btn-anexo {
-    width: 100%;
-  }
-}
+/*  .btn-anexo {*/
+/*    width: 100%;*/
+/*  }*/
+/*}*/
 
-@media (max-width: 425px) {
-  main::after {
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.4) 100%, transparent 65%);
-  }
+/*@media (max-width: 1024px) {*/
+/*  main::after {*/
+/*    background: linear-gradient(90deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.4) 100%, transparent 65%);*/
+/*  }*/
 
-  .anexo-home .btn-anexobb .capa-do-banco {
-    max-width: 80%;
-  }
-}
+/*  .anexo-home .anexo-container img {*/
+/*    max-width: 100px;*/
+/*  }*/
+/*}*/

@@ -15,6 +15,7 @@ import org.study.processamentoplanilhas.repository.PertoAtmRepository;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -31,7 +32,7 @@ public class ProcessSpreadsheetServiceComodato {
         return new ProcessStatusReturnDto(processStatus);
     }
 
-    public void getSpreadsheet() {
+    public HSSFWorkbook getSpreadsheet() {
 
         log.info("Get spreadsheet FROM database");
       Iterable<ComodatoAtmEntity> comodatoAtmList = comodatoAtmRepository.findAll();
@@ -73,33 +74,33 @@ public class ProcessSpreadsheetServiceComodato {
         int rowNum = 1;
         for (ComodatoAtmEntity comodatoAtmEntity : comodatoAtmList) {
             HSSFRow dataRow = sheet.createRow(rowNum);
-            dataRow.createCell(0).setCellValue(comodatoAtmEntity.getNroUniv());
-            dataRow.createCell(1).setCellValue(comodatoAtmEntity.getNomeDoContrato());
-            dataRow.createCell(2).setCellValue(comodatoAtmEntity.getFornecedor());
-            dataRow.createCell(3).setCellValue(comodatoAtmEntity.getPrfInsl());
-            dataRow.createCell(4).setCellValue(comodatoAtmEntity.getSagInsl());
-            dataRow.createCell(5).setCellValue(comodatoAtmEntity.getDependencia());
-            dataRow.createCell(6).setCellValue(comodatoAtmEntity.getMunicipio());
-            dataRow.createCell(7).setCellValue(comodatoAtmEntity.getCodMunicipio());
-            dataRow.createCell(8).setCellValue(comodatoAtmEntity.getUf());
-            dataRow.createCell(9).setCellValue(comodatoAtmEntity.getCat());
-            dataRow.createCell(10).setCellValue(comodatoAtmEntity.getCatResp());
-            dataRow.createCell(11).setCellValue(comodatoAtmEntity.getRegional());
-            dataRow.createCell(12).setCellValue(comodatoAtmEntity.getDist());
-            dataRow.createCell(13).setCellValue(comodatoAtmEntity.getDistanciabb());
-            dataRow.createCell(14).setCellValue(comodatoAtmEntity.getCriticidade());
-            dataRow.createCell(15).setCellValue(comodatoAtmEntity.getSemat());
-            dataRow.createCell(16).setCellValue(comodatoAtmEntity.getVlrParceiros());
+            safeSetValue(dataRow.createCell(0)::setCellValue, comodatoAtmEntity.getNroUniv());
+            safeSetValue(dataRow.createCell(1)::setCellValue, comodatoAtmEntity.getNomeDoContrato());
+            safeSetValue(dataRow.createCell(2)::setCellValue, comodatoAtmEntity.getFornecedor());
+            safeSetValue(dataRow.createCell(3)::setCellValue, comodatoAtmEntity.getPrfInsl());
+            safeSetValue(dataRow.createCell(4)::setCellValue, comodatoAtmEntity.getSagInsl());
+            safeSetValue(dataRow.createCell(5)::setCellValue, comodatoAtmEntity.getDependencia());
+            safeSetValue(dataRow.createCell(6)::setCellValue, comodatoAtmEntity.getMunicipio());
+            safeSetValue(dataRow.createCell(7)::setCellValue, comodatoAtmEntity.getCodMunicipio());
+            safeSetValue(dataRow.createCell(8)::setCellValue, comodatoAtmEntity.getUf());
+            safeSetValue(dataRow.createCell(9)::setCellValue, comodatoAtmEntity.getCat());
+            safeSetValue(dataRow.createCell(10)::setCellValue, comodatoAtmEntity.getCatResp());
+            safeSetValue(dataRow.createCell(11)::setCellValue, comodatoAtmEntity.getRegional());
+            safeSetValue(dataRow.createCell(12)::setCellValue, comodatoAtmEntity.getDist());
+            safeSetValue(dataRow.createCell(13)::setCellValue, comodatoAtmEntity.getDistanciabb());
+            safeSetValue(dataRow.createCell(14)::setCellValue, comodatoAtmEntity.getCriticidade());
+            safeSetValue(dataRow.createCell(15)::setCellValue, comodatoAtmEntity.getSemat());
+            safeSetValue(dataRow.createCell(16)::setCellValue, comodatoAtmEntity.getVlrParceiros());
             //dataRow.createCell(17).setCellValue(comodatoAtmEntity.getPrfSb);
-            dataRow.createCell(18).setCellValue(comodatoAtmEntity.getEndereco());
-            dataRow.createCell(19).setCellValue(comodatoAtmEntity.getBairro());
-            dataRow.createCell(20).setCellValue(comodatoAtmEntity.getCep());
-            dataRow.createCell(21).setCellValue(comodatoAtmEntity.getTelefone());
-            dataRow.createCell(22).setCellValue(comodatoAtmEntity.getCnpj());
-            dataRow.createCell(23).setCellValue(comodatoAtmEntity.getTempoAquisicao());
-            dataRow.createCell(24).setCellValue(comodatoAtmEntity.getLote());
-            dataRow.createCell(25).setCellValue(comodatoAtmEntity.getValorResidual());
-            dataRow.createCell(26).setCellValue(comodatoAtmEntity.getValorAquisicao());
+            safeSetValue(dataRow.createCell(18)::setCellValue, comodatoAtmEntity.getEndereco());
+            safeSetValue(dataRow.createCell(19)::setCellValue, comodatoAtmEntity.getBairro());
+            safeSetValue(dataRow.createCell(20)::setCellValue, comodatoAtmEntity.getCep());
+            safeSetValue(dataRow.createCell(21)::setCellValue, comodatoAtmEntity.getTelefone());
+            safeSetValue(dataRow.createCell(22)::setCellValue, comodatoAtmEntity.getCnpj());
+            safeSetValue(dataRow.createCell(23)::setCellValue, comodatoAtmEntity.getTempoAquisicao());
+            safeSetValue(dataRow.createCell(24)::setCellValue, comodatoAtmEntity.getLote());
+            safeSetValue(dataRow.createCell(25)::setCellValue, comodatoAtmEntity.getValorResidual());
+            safeSetValue(dataRow.createCell(26)::setCellValue, comodatoAtmEntity.getValorAquisicao());
             rowNum = rowNum + 1;
         }
 
@@ -108,17 +109,12 @@ public class ProcessSpreadsheetServiceComodato {
             sheet.autoSizeColumn(i);
         }
 
-        log.info("Creating file");
-        File currentDir = new File(".");
-        String currentDirPath = currentDir.getAbsolutePath();
-        String fileLocation = currentDirPath.substring(0, currentDirPath.length()-1) + "ComodatoAtm.xls";
+      return workbook;
+    }
 
-        try {
-            FileOutputStream fos = new FileOutputStream(fileLocation);
-            workbook.write(fos);
-            workbook.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private <T> void safeSetValue(Consumer<T> setCellValue, T value) {
+        if (value != null) {
+            setCellValue.accept(value);
         }
     }
 }

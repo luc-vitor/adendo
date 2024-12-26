@@ -117,8 +117,10 @@ button {
 }
 
 .home .imagem-fundo {
-	width: 100%;
+	width: 150%;
+	height: 200%;
 	object-fit: cover;
+	object-position: center;
 }
 .home .informacoes img {
 	max-width: 150px;
@@ -213,8 +215,11 @@ button {
 }
 
 .anexo-home .capa-do-banco {
-	width: 100%;
+	width: 150%;
+	height: 1024px;
 	object-fit: cover;
+	object-position: center;
+
 }
 .anexo-home .anexo-container img {
 	max-width: 150px;

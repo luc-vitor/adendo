@@ -136,18 +136,61 @@ public class ProcessSpreadsheetController {
     }
 
     @GetMapping("/ncr-atm")
-    public void obterNcrAtm() {
-        processSpreadsheetServiceNcr.getSpreadsheet();
+    public ResponseEntity<byte[]> obterNrcAtm(){
+        try(HSSFWorkbook wb = processSpreadsheetServiceNcr.getSpreadsheet()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+            byte[] content = baos.toByteArray();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ncrAtm.xls")
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .body(content);
+
+
+        } catch (IOException e) {
+            log.warn("Falha ao obter planilha ncrAtm", e);
+            throw new RuntimeException(e);
+        }
     }
+
+
 
     @GetMapping("/diebold-atm")
-    public void obterDieboldAtm() {
-        processSpreadsheetServiceDiebold.getSpreadsheet();
-    }
+    public ResponseEntity<byte[]> obterDieboldAtm(){
+        try(HSSFWorkbook wb = processSpreadsheetServiceDiebold.getSpreadsheet()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+            byte[] content = baos.toByteArray();
 
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=dieboldAtm.xls")
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .body(content);
+
+
+        } catch (IOException e) {
+            log.warn("Falha ao obter planilha dieboldAtm", e);
+            throw new RuntimeException(e);
+        }
+    }
     @GetMapping("/comodato-atm")
-    public void obterComodatodAtm() {
-        processSpreadsheetServiceComodato.getSpreadsheet();
+    public ResponseEntity<byte[]> obterComodatoAtm(){
+        try(HSSFWorkbook wb = processSpreadsheetServiceComodato.getSpreadsheet()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+            byte[] content = baos.toByteArray();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=comodatoAtm.xls")
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .body(content);
+
+
+        } catch (IOException e) {
+            log.warn("Falha ao obter planilha comodatoAtm", e);
+            throw new RuntimeException(e);
+        }
     }
 
 }

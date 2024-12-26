@@ -13,6 +13,7 @@ import org.study.processamentoplanilhas.repository.DieboldAtmRepository;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -29,7 +30,7 @@ public class ProcessSpreadsheetServiceDiebold {
         return new ProcessStatusReturnDto(processStatus);
     }
 
-    public void getSpreadsheet() {
+    public HSSFWorkbook getSpreadsheet() {
 
         log.info("Get spreadsheet FROM database");
       Iterable<DieboldAtmEntity> dieboldAtmList = dieboldAtmRepository.findAll();
@@ -71,33 +72,33 @@ public class ProcessSpreadsheetServiceDiebold {
         int rowNum = 1;
         for (DieboldAtmEntity dieboldAtmEntity : dieboldAtmList) {
             HSSFRow dataRow = sheet.createRow(rowNum);
-            dataRow.createCell(0).setCellValue(dieboldAtmEntity.getNroUniv());
-            dataRow.createCell(1).setCellValue(dieboldAtmEntity.getNomeDoContrato());
-            dataRow.createCell(2).setCellValue(dieboldAtmEntity.getFornecedor());
-            dataRow.createCell(3).setCellValue(dieboldAtmEntity.getPrfInsl());
-            dataRow.createCell(4).setCellValue(dieboldAtmEntity.getSagInsl());
-            dataRow.createCell(5).setCellValue(dieboldAtmEntity.getDependencia());
-            dataRow.createCell(6).setCellValue(dieboldAtmEntity.getMunicipio());
-            dataRow.createCell(7).setCellValue(dieboldAtmEntity.getCodMunicipio());
-            dataRow.createCell(8).setCellValue(dieboldAtmEntity.getUf());
-            dataRow.createCell(9).setCellValue(dieboldAtmEntity.getCat());
-            dataRow.createCell(10).setCellValue(dieboldAtmEntity.getCatResp());
-            dataRow.createCell(11).setCellValue(dieboldAtmEntity.getRegional());
-            dataRow.createCell(12).setCellValue(dieboldAtmEntity.getDist());
-            dataRow.createCell(13).setCellValue(dieboldAtmEntity.getDistanciabb());
-            dataRow.createCell(14).setCellValue(dieboldAtmEntity.getCriticidade());
-            dataRow.createCell(15).setCellValue(dieboldAtmEntity.getSemat());
-            dataRow.createCell(16).setCellValue(dieboldAtmEntity.getVlrParceiros());
-            //dataRow.createCell(17).setCellValue(dieboldAtmEntity.getPrfSb);
-            dataRow.createCell(18).setCellValue(dieboldAtmEntity.getEndereco());
-            dataRow.createCell(19).setCellValue(dieboldAtmEntity.getBairro());
-            dataRow.createCell(20).setCellValue(dieboldAtmEntity.getCep());
-            dataRow.createCell(21).setCellValue(dieboldAtmEntity.getTelefone());
-            dataRow.createCell(22).setCellValue(dieboldAtmEntity.getCnpj());
-            dataRow.createCell(23).setCellValue(dieboldAtmEntity.getTempoAquisicao());
-            dataRow.createCell(24).setCellValue(dieboldAtmEntity.getLote());
-            dataRow.createCell(25).setCellValue(dieboldAtmEntity.getValorResidual());
-            dataRow.createCell(26).setCellValue(dieboldAtmEntity.getValorAquisicao());
+            safeSetValue(dataRow.createCell(0)::setCellValue, dieboldAtmEntity.getNroUniv());
+            safeSetValue(dataRow.createCell(1)::setCellValue, dieboldAtmEntity.getNomeDoContrato());
+            safeSetValue(dataRow.createCell(2)::setCellValue, dieboldAtmEntity.getFornecedor());
+            safeSetValue(dataRow.createCell(3)::setCellValue, dieboldAtmEntity.getPrfInsl());
+            safeSetValue(dataRow.createCell(4)::setCellValue, dieboldAtmEntity.getSagInsl());
+            safeSetValue(dataRow.createCell(5)::setCellValue, dieboldAtmEntity.getDependencia());
+            safeSetValue(dataRow.createCell(6)::setCellValue, dieboldAtmEntity.getMunicipio());
+            safeSetValue(dataRow.createCell(7)::setCellValue, dieboldAtmEntity.getCodMunicipio());
+            safeSetValue(dataRow.createCell(8)::setCellValue, dieboldAtmEntity.getUf());
+            safeSetValue(dataRow.createCell(9)::setCellValue, dieboldAtmEntity.getCat());
+            safeSetValue(dataRow.createCell(10)::setCellValue, dieboldAtmEntity.getCatResp());
+            safeSetValue(dataRow.createCell(11)::setCellValue, dieboldAtmEntity.getRegional());
+            safeSetValue(dataRow.createCell(12)::setCellValue, dieboldAtmEntity.getDist());
+            safeSetValue(dataRow.createCell(13)::setCellValue, dieboldAtmEntity.getDistanciabb());
+            safeSetValue(dataRow.createCell(14)::setCellValue, dieboldAtmEntity.getCriticidade());
+            safeSetValue(dataRow.createCell(15)::setCellValue, dieboldAtmEntity.getSemat());
+            safeSetValue(dataRow.createCell(16)::setCellValue, dieboldAtmEntity.getVlrParceiros());
+            //safeSetValue(dataRow.createCell(17)::setCellValue, dieboldAtmEntity.getPrfSb);
+            safeSetValue(dataRow.createCell(18)::setCellValue, dieboldAtmEntity.getEndereco());
+            safeSetValue(dataRow.createCell(19)::setCellValue, dieboldAtmEntity.getBairro());
+            safeSetValue(dataRow.createCell(20)::setCellValue, dieboldAtmEntity.getCep());
+            safeSetValue(dataRow.createCell(21)::setCellValue, dieboldAtmEntity.getTelefone());
+            safeSetValue(dataRow.createCell(22)::setCellValue, dieboldAtmEntity.getCnpj());
+            safeSetValue(dataRow.createCell(23)::setCellValue, dieboldAtmEntity.getTempoAquisicao());
+            safeSetValue(dataRow.createCell(24)::setCellValue, dieboldAtmEntity.getLote());
+            safeSetValue(dataRow.createCell(25)::setCellValue, dieboldAtmEntity.getValorResidual());
+            safeSetValue(dataRow.createCell(26)::setCellValue, dieboldAtmEntity.getValorAquisicao());
             rowNum = rowNum + 1;
         }
 
@@ -106,17 +107,12 @@ public class ProcessSpreadsheetServiceDiebold {
             sheet.autoSizeColumn(i);
         }
 
-        log.info("Creating file");
-        File currentDir = new File(".");
-        String currentDirPath = currentDir.getAbsolutePath();
-        String fileLocation = currentDirPath.substring(0, currentDirPath.length()-1) + "DieboldAtm.xls";
+        return workbook;
+    }
 
-        try {
-            FileOutputStream fos = new FileOutputStream(fileLocation);
-            workbook.write(fos);
-            workbook.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private <T> void safeSetValue(Consumer<T> setCellValue, T value) {
+        if (value != null) {
+            setCellValue.accept(value);
         }
     }
 }

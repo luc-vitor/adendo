@@ -96,7 +96,6 @@ public class ProcessSpreadsheetServicePerto {
             safeSetValue(dataRow.createCell(20)::setCellValue, pertoAtmEntity.getTelefone());
             safeSetValue(dataRow.createCell(21)::setCellValue, pertoAtmEntity.getCnpj());
             safeSetValue(dataRow.createCell(22)::setCellValue, pertoAtmEntity.getTempoAquisicao());
-
             safeSetValue(dataRow.createCell(23)::setCellValue, pertoAtmEntity.getLote());
             safeSetValue(dataRow.createCell(24)::setCellValue, pertoAtmEntity.getValorAquisicao());
             safeSetValue(dataRow.createCell(25)::setCellValue, pertoAtmEntity.getValorAquisicao());

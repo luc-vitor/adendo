@@ -59,19 +59,20 @@
 
 						<h3 class="texto-anexo-exp">EXPORTE PLANILHAS DOS PARQUES PARCEIROS</h3>
 
-						<button class="export-button-anexoBbFinal" data-filename="anexo-bb-final.xlsx">EXPORTAR ANEXO BANCO DO BRASIL FINAL</button>
+						<!-- BOTÃO PARA EXPORTAÇÃO ANEXO FINAL -->
+						<button class="export-button-anexoBbFinal" data-filename="anexo-bb-final.xlsx">DONWLOAD ANEXO BANCO DO BRASIL FINAL</button>
 
 						<!-- Botão de exportação COMODATO-->
-						<button class="export-button-comodato" data-filename="diebold_comodato.xlsx">Exportar DIEBOLD (COMODATO)</button>
+						<button class="export-button-comodato" onclick="donwloadComodato()">DONWLOAD DIEBOLD (COMODATO)</button>
 
 						<!--Botão de Exportação DIEBOLD-->
-						<button class="export-button-diebold" data-filename="diebold.xlsx">Exportar DIEBOLD</button>
+						<button class="export-button-diebold" onclick="donwloadDiebold()">DONWLOAD DIEBOLD</button>
 
 						<!--Botão de Exportação NCR-->
-						<button class="export-button-nrc" data-filename="ncr.xlsx">Exportar NCR</button>
+						<button class="export-button-nrc" onclick="donwloadNcr()">DONWLOAD NCR</button>
 
 						<!--Botão de Exportação PERTO-->
-						<button class="export-button-perto" onclick="donwloadPerto()">Exportar PERTO</button>
+						<button class="export-button-perto" onclick="donwloadPerto()">DONWLOAD PERTO</button>
 					</div>
 				</div>
 			</div>
@@ -225,6 +226,9 @@
 				}
 			});
 
+
+			// AREA DOS DONWLOADS
+
 			function donwloadPerto () {
 				fetch("api/v1/process/perto-atm")
 						.then(response => {
@@ -238,6 +242,69 @@
 							Object.assign(document.createElement('a'), {
 								href: window.URL.createObjectURL(blob),
 								download: 'PertoAtm.xls',
+							}).click();
+						})
+						.catch(error => {
+							console.error("Donwload falhou!", error)
+							alert("Falha ao baixar aquivo, tente novamente!")
+						})
+			}
+
+			function donwloadNcr () {
+				fetch("api/v1/process/ncr-atm")
+						.then(response => {
+							if (!response.ok){
+								console.error("Erro ao baixar aquivo", response)
+								throw new Error("Erro ao obter arquivo!")
+							}
+							return response.blob()
+						})
+						.then(blob => {
+							Object.assign(document.createElement('a'), {
+								href: window.URL.createObjectURL(blob),
+								download: 'NcrAtm.xls',
+							}).click();
+						})
+						.catch(error => {
+							console.error("Donwload falhou!", error)
+							alert("Falha ao baixar aquivo, tente novamente!")
+						})
+			}
+
+			function donwloadDiebold () {
+				fetch("api/v1/process/diebold-atm")
+						.then(response => {
+							if (!response.ok){
+								console.error("Erro ao baixar aquivo", response)
+								throw new Error("Erro ao obter arquivo!")
+							}
+							return response.blob()
+						})
+						.then(blob => {
+							Object.assign(document.createElement('a'), {
+								href: window.URL.createObjectURL(blob),
+								download: 'DieboldAtm.xls',
+							}).click();
+						})
+						.catch(error => {
+							console.error("Donwload falhou!", error)
+							alert("Falha ao baixar aquivo, tente novamente!")
+						})
+			}
+
+			function donwloadComodato () {
+				fetch("api/v1/process/comodato-atm")
+						.then(response => {
+							if (!response.ok){
+								console.error("Erro ao baixar aquivo", response)
+								throw new Error("Erro ao obter arquivo!")
+							}
+							return response.blob()
+						})
+						.then(blob => {
+							Object.assign(document.createElement('a'), {
+								href: window.URL.createObjectURL(blob),
+								download: 'ComodatoAtm.xls',
 							}).click();
 						})
 						.catch(error => {
