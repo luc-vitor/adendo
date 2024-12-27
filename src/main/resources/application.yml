@@ -17,6 +17,8 @@ spring:
         generate_statistics: false
 
   datasource:
+    hikari:
+      initialization-fail-timeout: 0
     url: ${ADENDO_DATABASE_URL}
     username: ${ADENDO_DATABASE_USERNAME}
     password: ${ADENDO_DATABASE_PASSWORD}
@@ -31,9 +33,11 @@ spring:
     name: processamento-planilhas
   main:
     banner-mode: off
+   # lazy-initialization: true
   threads:
     virtual:
       enabled: true
+
 
 springdoc:
   api-docs:

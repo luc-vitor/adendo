@@ -50,7 +50,7 @@
 					<div class="tooltip" id="tooltip-taa">Clique para importar o arquivo TAA</div>
 
 					<!-- Botão de executar -->
-					<button id="btn-executar" disabled>DOWNLOAD TAA</button>
+					<button id="btn-executar" onclick="donwloadAnexobb()">DOWNLOAD TAA</button>
 					<div class="tooltip" id="tooltip-exec">O arquivo TAA deve ser importado para liberar o DOWNLOAD</div>
 
 				</div>
@@ -257,22 +257,26 @@
 				}
 			});
 
-			// Função para exportar planilha
-			function exportPlanilha(data, filename) {
-				const worksheet = XLSX.utils.aoa_to_sheet(data);
-				const workbook = XLSX.utils.book_new();
-				XLSX.utils.book_append_sheet(workbook, worksheet, 'Planilha');
-				XLSX.writeFile(workbook, filename);
+			function donwloadAnexobb () {
+				fetch("api/v1/process/anexo-bb-donwload")
+						.then(response => {
+							if (!response.ok){
+								console.error("Erro ao baixar aquivo", response)
+								throw new Error("Erro ao obter arquivo!")
+							}
+							return response.blob()
+						})
+						.then(blob => {
+							Object.assign(document.createElement('a'), {
+								href: window.URL.createObjectURL(blob),
+								download: 'AnexoBancoDoBrasil.xls',
+							}).click();
+						})
+						.catch(error => {
+							console.error("Donwload falhou!", error)
+							alert("Falha ao baixar aquivo, tente novamente!")
+						})
 			}
-
-			// Evento de clique no botão "Executar"
-			btnExecutar.addEventListener('click', () => {
-				if (!importedFileType || !importedFile) {
-					alert('Nenhum arquivo foi importado.');
-					return;
-				}
-				handleFileUpload();
-			});
 
 		</script>
 

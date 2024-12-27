@@ -13,6 +13,7 @@ import org.study.processamentoplanilhas.domain.ProcessStatus;
 import org.study.processamentoplanilhas.domain.ProcessStatusReturnDto;
 import org.study.processamentoplanilhas.domain.TaaSpreadsheetEntity;
 import org.study.processamentoplanilhas.repository.TaaSpreadsheetRepository;
+import org.study.processamentoplanilhas.util.Formatter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,8 +78,8 @@ public class ProcessSpreadsheetServiceTaa {
                 final String sclPbms = getStringCellValue(row.getCell(4));
                 final String seqPbms = getStringCellValue(row.getCell(5));
                 final String nomeDoContrato = getStringCellValue(row.getCell(6));
-                final String prfInls = getStringCellValue(row.getCell(7));
-                final String sagInls = getStringNotacaoCientifica(row.getCell(8));
+                final String prfInls = Formatter.getStringRemoveChars(getStringCellValue(row.getCell(7)), 4);
+                final String sagInls = Formatter.getStringRemoveChars(getStringNotacaoCientifica(row.getCell(8)), 2);
                 final String nome = getStringCellValue(row.getCell(9));
                 final String municipio = getStringCellValue(row.getCell(10));
                 final String uf = getStringCellValue(row.getCell(11));
@@ -189,12 +190,17 @@ public class ProcessSpreadsheetServiceTaa {
             log.info("Planilha Taa salva com sucesso! | qtdLinhas: {}", entities.size());
             Instant finish = Instant.now();
             Duration duration = Duration.between(start, finish);
-            log.info("Tempo de processamento para o salvamento: Segundos={} | Minutos={} | Horas={}",duration.toSeconds(),duration.toMinutes(),duration.toHours());
-            processStatus=ProcessStatus.FINISHED;
+            log.info("Tempo de processamento para o salvamento: Segundos={} | Minutos={} | Horas={}", duration.toSeconds(), duration.toMinutes(), duration.toHours());
+
+            // BLOCO DE PROCEDURE
+            log.info("Iniciando chamada do procedure");
+            taaSpreadsheetRepository.criarAnexoBancoDoBrasil();
+            log.info("Procedure finalizado!");
+            processStatus = ProcessStatus.FINISHED;
 
         } catch (Exception e) {
             log.warn("Erro ao tentar processar a planilha.", e);
-            processStatus=ProcessStatus.FAILED;
+            processStatus = ProcessStatus.FAILED;
             throw new RuntimeException(e);
         }
 
@@ -216,7 +222,7 @@ public class ProcessSpreadsheetServiceTaa {
 
     private String getStringNotacaoCientifica(Cell cell) {
         Double cellValue = getDoubleCellValue(cell);
-        if(cellValue == null) {
+        if (cellValue == null) {
             return null;
         }
         return String.format("%.0f", cellValue);
@@ -228,6 +234,4 @@ public class ProcessSpreadsheetServiceTaa {
         }
         return cell.getCellType() == CellType.STRING ? cell.getStringCellValue() : cell.toString();
     }
-
 }
-

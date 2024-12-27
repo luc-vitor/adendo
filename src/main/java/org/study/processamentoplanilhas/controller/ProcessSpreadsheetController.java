@@ -31,8 +31,9 @@ public class ProcessSpreadsheetController {
     private final ProcessSpreadsheetServiceNcr processSpreadsheetServiceNcr;
     private final ProcessSpreadsheetServiceDiebold processSpreadsheetServiceDiebold;
     private final ProcessSpreadsheetServiceComodato processSpreadsheetServiceComodato;
+    private final ProcessSpreadsheetServiceAnexoBancoDoBrasilDonwload processSpreadsheetServiceAnexoBancoDoBrasilDonwload;
 
-    public ProcessSpreadsheetController(final ProcessSpreadsheetServiceDemaisBens processSpreadsheetServiceDemaisBens, final ProcessSpreadsheetServiceTaa processSpreadsheetServiceTaa, final ProcessSpreadsheetServiceAnexoBb processSpreadsheetServiceAnexoBb, final ProcessSpreadsheetServiceAnexoBb52 processSpreadsheetServiceAnexoBb52, final ProcessSpreadsheetServicePerto processSpreadsheetServicePerto, final ProcessSpreadsheetServiceNcr processSpreadsheetServiceNcr, final ProcessSpreadsheetServiceDiebold processSpreadsheetServiceDiebold, final ProcessSpreadsheetServiceComodato processSpreadsheetServiceComodato) {
+    public ProcessSpreadsheetController(final ProcessSpreadsheetServiceDemaisBens processSpreadsheetServiceDemaisBens, final ProcessSpreadsheetServiceTaa processSpreadsheetServiceTaa, final ProcessSpreadsheetServiceAnexoBb processSpreadsheetServiceAnexoBb, final ProcessSpreadsheetServiceAnexoBb52 processSpreadsheetServiceAnexoBb52, final ProcessSpreadsheetServicePerto processSpreadsheetServicePerto, final ProcessSpreadsheetServiceNcr processSpreadsheetServiceNcr, final ProcessSpreadsheetServiceDiebold processSpreadsheetServiceDiebold, final ProcessSpreadsheetServiceComodato processSpreadsheetServiceComodato, final ProcessSpreadsheetServiceAnexoBancoDoBrasilDonwload processSpreadsheetServiceAnexoBancoDoBrasilDonwload) {
         this.processSpreadsheetServiceDemaisBens = processSpreadsheetServiceDemaisBens;
         this.processSpreadsheetServiceTaa = processSpreadsheetServiceTaa;
         this.processSpreadsheetServiceAnexoBb = processSpreadsheetServiceAnexoBb;
@@ -41,6 +42,7 @@ public class ProcessSpreadsheetController {
         this.processSpreadsheetServiceNcr = processSpreadsheetServiceNcr;
         this.processSpreadsheetServiceDiebold = processSpreadsheetServiceDiebold;
         this.processSpreadsheetServiceComodato = processSpreadsheetServiceComodato;
+        this.processSpreadsheetServiceAnexoBancoDoBrasilDonwload = processSpreadsheetServiceAnexoBancoDoBrasilDonwload;
     }
 
     @PostMapping("/demais-bens")
@@ -193,6 +195,24 @@ public class ProcessSpreadsheetController {
         }
     }
 
+    @GetMapping("/anexo-bb-donwload")
+    public ResponseEntity<byte[]> obterAnexoBancoDoBrasil(){
+        try(HSSFWorkbook wb = processSpreadsheetServiceAnexoBancoDoBrasilDonwload.getSpreadsheet()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            wb.write(baos);
+            byte[] content = baos.toByteArray();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=anexoBancoDoBrasil.xls")
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .body(content);
+
+
+        } catch (IOException e) {
+            log.warn("Falha ao obter planilha anexoBancoDoBrasil", e);
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 
